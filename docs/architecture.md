@@ -1,104 +1,196 @@
-# Proposed System Architecture
+# SENTINELPE Proposed System Architecture
 
-> Status: design proposal. Components and flows below must be validated during implementation.
+> **Status: design proposal, not implemented.** The components and data flows below are hypotheses to validate. The repository must not describe a proposed feature as working until code and test evidence exist.
 
-## 1. Design principles
+## 1. Purpose and scope
 
-- Treat downloaded content as untrusted until an explicit decision is made.
-- Separate the browser interface from file analysis.
-- Keep analysis isolated from the host and restrict network access.
-- Use deterministic baselines before adding machine learning.
-- Preserve evidence for decisions and communicate uncertainty.
-- Prefer reproducible experiments and least-privilege components.
+SENTINELPE investigates a local-first browser-based workflow for static malware assessment of Windows Portable Executable (PE) files, initially `.exe` and `.dll`.
 
-## 2. High-level components
+The intended sequence is:
 
-### Browser extension
+1. A supported PE file is selected through a browser workflow that has been experimentally verified.
+2. The browser-side component validates the input and extracts a defined set of static PE features.
+3. A lightweight local classifier produces an initial assessment.
+4. Only when the local result is uncertain, the user may explicitly consent to sending the selected file to a server-side classifier.
+5. The result is returned with its source (local or server), confidence/uncertainty information, and limitations.
 
-A Chrome Manifest V3 extension will provide the user-facing interface and integrate with supported browser download events. It should display the download state, analysis progress, and final assessment.
+This is a research prototype, not a replacement for antivirus software and not a guarantee that a file is safe.
 
-**Feasibility gate:** Confirm the exact guarantees of the Chrome downloads APIs. In particular, establish whether the extension can reliably prevent a file from becoming available in the normal download location before analysis completes. Do not assume that observing or pausing a download is equivalent to pre-save quarantine.
+## 2. Scope boundaries
 
-### Staging and orchestration service
+### In scope
 
-A local service may receive a file or a controlled reference to it, assign an analysis job identifier, enforce size and type limits, and coordinate the worker. Authentication and access controls are required even for a localhost service.
+- Static inspection of supported Windows PE files.
+- A Chrome Manifest V3 user interface and tested file-selection/download integration.
+- Browser-side feature extraction and local inference.
+- Optional server-side classification after explicit consent.
+- A Python reference pipeline for dataset preparation, feature extraction, training, and evaluation.
+- Measurable evaluation of detection quality, feature consistency, latency, and workflow reliability.
 
-### Analysis worker
+### Out of scope
 
-The worker performs bounded static inspection, records metadata, and requests sandbox analysis only when appropriate. It must validate inputs, impose time and resource limits, and avoid trusting file names or declared MIME types.
+- Running or executing submitted files.
+- Dynamic or behavioural analysis.
+- An execution sandbox or virtual-machine detonation pipeline.
+- URL reputation, phishing detection, and archive scanning.
+- Automatic upload of files to remote services.
+- Claiming that Chrome extension APIs provide guaranteed pre-release quarantine without experimental proof.
 
-### Isolation environment
+## 3. Logical components
 
-The sandbox should be disposable and separated from the host. The design should consider filesystem isolation, process restrictions, memory and CPU limits, network policy, snapshot/revert capability, and safe disposal of artefacts.
+### 3.1 Chrome extension (Manifest V3)
 
-### Detection and decision layer
+Responsibilities:
 
-The decision layer may combine static indicators, sandbox observations, reputation information (if permitted), and a machine-learning score. It must distinguish observed evidence from model inference. A model score alone must not be treated as a guarantee of safety.
+- Provide a user-facing entry point for supported PE analysis.
+- Observe only the download events required by the selected workflow.
+- Offer explicit file selection when the download lifecycle cannot safely provide pre-release staging.
+- Display validation, analysis, consent, and result states.
+- Never represent an observed or paused download as quarantined unless filesystem tests demonstrate that guarantee.
 
-### User interface
+The extension should request the minimum permissions required. Download interception and file-content access are separate concerns: access to download metadata does not automatically provide read access to the downloaded file's bytes.
 
-The extension should communicate states such as pending, analysing, suspicious, malicious (only when supported by defined evidence), inconclusive, and completed. The UI should explain why a result was produced and avoid implying certainty where none exists.
+### 3.2 Input validation and PE feature extraction
 
-## 3. Proposed data flow
+Responsibilities:
 
-1. The browser reports a download event to the extension.
-2. The extension applies the verified download-handling mechanism.
-3. A staged file or controlled file reference is passed to the local orchestration service.
-4. The service validates the request and creates an analysis job.
-5. The worker performs static checks and, if enabled, submits the file to the isolated environment.
-6. Analysis results are normalised and passed to the decision layer.
-7. The service returns a result and supporting evidence to the extension.
-8. The user receives the result and an appropriate next action.
-9. Temporary files and sandbox state are cleaned up according to the retention policy.
+- Enforce supported file types and a configurable maximum file size.
+- Validate PE structure rather than trusting the filename or MIME type.
+- Reject or safely handle truncated, malformed, and unsupported inputs.
+- Extract a documented, bounded feature vector from PE headers and selected structural metadata.
+- Avoid executing the submitted file.
+- Return structured errors for invalid input.
 
-The precise ordering of steps 2 and 3 depends on the browser feasibility test. If safe pre-release staging cannot be guaranteed, the product description and threat model must be adjusted rather than overstating the protection.
+The feature specification must define field names, data types, missing-value handling, bounds, and versioning. Browser and reference implementations must be tested for feature-level agreement on the same benign and authorised test files.
 
-## 4. Trust boundaries
+### 3.3 Local classifier
 
-| Boundary | Main concern | Required control |
+Responsibilities:
+
+- Load a versioned model compatible with browser execution.
+- Apply exactly the feature ordering and preprocessing expected by the model.
+- Return a class/score and a calibrated or otherwise clearly described confidence measure.
+- Apply a threshold selected using validation data.
+- Mark out-of-distribution, malformed, or low-confidence inputs as inconclusive rather than forcing a safe/malicious label.
+
+A model score is not proof of file safety. The initial implementation should compare a simple baseline before adding model complexity.
+
+### 3.4 Optional server-side classifier
+
+This component is conditional on feasibility and demonstrated research value.
+
+Responsibilities:
+
+- Accept a file only after the user has explicitly consented to that particular transfer.
+- Enforce authentication or an equivalent access-control mechanism, request-size limits, input validation, and timeouts.
+- Apply a documented server-side feature/model pipeline.
+- Return a structured result with model/version metadata and an explicit indication that the assessment came from the server.
+- Apply a defined retention policy and avoid storing file contents or sensitive metadata longer than necessary.
+
+The user must be able to decline escalation. No file should be transmitted silently or automatically merely because the local classifier is uncertain.
+
+### 3.5 Python research and evaluation pipeline
+
+Responsibilities:
+
+- Record dataset provenance, licence/terms, labels, and known limitations.
+- Deduplicate and split data before model tuning.
+- Extract the same documented features used by the browser implementation, where feasible.
+- Train baseline and candidate models.
+- Export model artefacts and preprocessing metadata in a versioned format.
+- Produce reproducible metrics and error analysis.
+
+## 4. Proposed data flow
+
+1. The user starts analysis from the extension or chooses a supported file through the explicitly tested workflow.
+2. The extension obtains access to the selected file through a supported user-mediated browser mechanism.
+3. Input validation checks size, file structure, and supported PE type.
+4. The browser-side extractor generates the versioned feature vector.
+5. The local classifier produces an assessment.
+6. If the assessment is inconclusive under the validation-defined policy, the extension explains the uncertainty and offers optional server analysis.
+7. If the user declines, the local result and its uncertainty are shown; no upload occurs.
+8. If the user consents, the selected file is sent to the configured API over a protected connection, subject to the deployment model and documented controls.
+9. The server returns a structured result; the extension labels it as a server assessment.
+10. Temporary data is removed according to the documented retention policy.
+
+The browser download lifecycle may not permit steps 1–2 to happen before the file reaches the normal download location. That is a separate feasibility question, not an assumption embedded in this data flow.
+
+## 5. Chrome download staging feasibility gate
+
+This is the highest-priority technical risk and must be resolved before describing the product as a pre-release download protection system.
+
+The Chrome downloads API exposes download lifecycle events and controls such as pause, resume, cancel, and filename suggestion. These controls must not be conflated with guaranteed interception of file bytes or guaranteed isolation from the user's normal Downloads directory.
+
+### Minimal experiment
+
+Use a disposable Chrome profile and benign test files only.
+
+1. Record the Chrome version, operating system, extension manifest, and requested permissions.
+2. Implement a minimal Manifest V3 extension that records relevant download events and state transitions with timestamps.
+3. Test `onCreated`, `onChanged`, `onDeterminingFilename` (where applicable), pause, resume, and cancel independently.
+4. During each test, inspect the actual filesystem and verify when the file first becomes readable in the normal download location.
+5. Repeat for small and larger benign files, interrupted/resumed downloads, duplicate names, and user cancellation.
+6. Record event logs, file paths, timestamps, and any race conditions.
+7. Do not use malware samples or claim quarantine from API state alone.
+
+### Decision rule
+
+- **Pass:** only if repeated tests demonstrate that the chosen workflow prevents user access to the file until the analysis decision, with a clearly defined and reproducible mechanism.
+- **Fail:** if the file becomes accessible before the decision, or the mechanism is unreliable.
+- **Inconclusive:** if the experiment cannot establish the filesystem visibility boundary.
+
+If the result is fail or inconclusive, use an explicit user-selected completed-file analysis workflow for the prototype and revise all claims accordingly. Do not build the project around an unverified quarantine guarantee.
+
+## 6. Trust boundaries and controls
+
+| Boundary | Risk | Planned control |
 |---|---|---|
-| Browser to local service | Unauthorised local requests | Local binding, request authentication, origin validation, strict input validation |
-| Service to worker | Malformed jobs or resource exhaustion | Schema validation, queue limits, timeouts, least privilege |
-| Worker to sandbox | Escape or host compromise | Disposable isolation, restricted mounts, no host credentials |
-| Sandbox to network | Malware communication or lateral movement | Network disabled by default; tightly controlled test network when authorised |
-| Analysis result to UI | Misleading or tampered results | Structured schema, provenance, explicit uncertainty |
-| Repository and build pipeline | Secret or sample leakage | Secret scanning, ignore rules, dependency review, no live samples in Git |
+| Download/file selection to extension | Wrong file, spoofed extension, malformed input | Structural PE validation, size limits, user-visible selected filename |
+| Extension to local inference | Unexpected feature shape or parser failure | Versioned schema, bounded parser, safe error states |
+| Extension to server | Unconsented disclosure or local request abuse | Explicit per-file consent, protected transport, authentication/access control, strict CORS/origin policy |
+| API to classifier | Resource exhaustion or malformed request | Request limits, timeouts, validation, bounded processing |
+| Dataset to training pipeline | Label noise, duplicates, leakage, licence violation | Provenance records, deduplication, split controls, licence review |
+| Model to user interface | False reassurance or misleading score | Clear uncertainty, model/version display, no absolute safety claim |
+| Repository/build pipeline | Secret or sample leakage | Ignore rules, secret scanning, no malware samples or credentials in Git |
 
-## 5. Threats and abuse cases to consider
+## 7. Data handling and privacy
 
-- Malformed files designed to crash parsers or exhaust resources
-- Archive bombs and deeply nested archives
-- Files that misrepresent their type or extension
-- Time-delayed or environment-aware malicious behaviour
-- Sandbox escape attempts
-- Localhost request abuse and cross-origin requests
-- Race conditions in the browser download workflow
-- False positives that block legitimate files
-- False negatives that incorrectly reassure users
-- Leakage of confidential files through external analysis services
+Document before implementation:
 
-## 6. Data handling
+- Supported PE types and maximum file size.
+- Exact feature fields extracted locally.
+- Whether raw file bytes ever leave the user's device.
+- The user-consent wording and the exact trigger for server transfer.
+- Server destination, access controls, retention period, and deletion behaviour.
+- Log fields, redaction, and whether hashes or metadata are retained.
+- Dataset source, licence, permitted use, and retention.
 
-The implementation should define:
-- Maximum file size and supported file types
-- Temporary storage location and access permissions
-- Retention and secure deletion rules
-- Whether file contents ever leave the local machine
-- Logging fields and redaction rules
-- Dataset provenance and licence records
+The default design should keep initial feature extraction and inference local. Server escalation is optional and must be user-authorised.
 
-Avoid storing full file contents in logs. Use hashes and minimal metadata where sufficient.
+## 8. Failure states
 
-## 7. Early technical proof-of-concept tests
+The extension should distinguish at least:
 
-1. Verify the browser event lifecycle and available control points for downloads.
-2. Measure whether a file can be staged without being exposed in the normal download directory.
-3. Test interrupted, resumed, duplicate, and cancelled downloads.
-4. Test large files, archives, unsupported formats, and network failures.
-5. Demonstrate that the analysis worker cannot access sensitive host paths.
-6. Demonstrate that the sandbox is disposable and cannot access the host's credentials.
-7. Verify cleanup after success, failure, timeout, and service restart.
+- Unsupported file type.
+- Invalid or malformed PE.
+- File exceeds configured size limit.
+- Local feature extraction failed.
+- Local result is inconclusive.
+- User declined server escalation.
+- Server unavailable or request timed out.
+- Server result returned.
+- Analysis completed with a documented limitation.
 
-## 8. Architecture decision records
+A failure to analyse must never be presented as a clean or safe result.
 
-Important choices should be recorded in short decision records under docs/decisions/, including context, options considered, decision, trade-offs, and date. This will make the research and implementation rationale auditable.
+## 9. Architecture decision records
+
+Record consequential choices under `docs/decisions/`, including:
+
+- Chrome file-access and download workflow.
+- Supported PE feature set and schema version.
+- Local model format and inference runtime.
+- Local uncertainty threshold and escalation policy.
+- Whether server escalation is retained in the final scope.
+
+Each record should include context, options, evidence, decision, trade-offs, and date.
