@@ -1,160 +1,120 @@
-# SENTINELPE Testing and Evaluation Plan
+# SentinelPE Testing and Evaluation Plan
 
-> **Status: proposed test plan.** No test in this document is claimed to have been executed. Record actual environment details, outputs, failures, and evidence before marking a test complete.
+> **Status: proposed protocol.** No test here has been run. Record environment, outputs, failures and evidence before marking a test complete.
 
-## 1. Testing objectives
+## 1. Evidence types
 
-The testing process must establish:
+Each objective produces a different kind of evidence, and each supports only its own claim.
 
-1. Whether the selected Chrome workflow can provide the claimed file-access boundary.
-2. Whether supported PE files are validated and parsed safely.
-3. Whether browser-side features agree with the reference feature pipeline.
-4. Whether the local classifier performs better than an appropriate simple baseline.
-5. Whether optional server escalation is genuinely consent-gated and handles failures safely.
-6. What accuracy, false-positive, latency, and resource limitations remain.
-
-## 2. Chrome workflow and staging feasibility
-
-Use benign files only and a disposable browser profile.
-
-| ID | Test | Procedure / evidence required | Acceptance condition |
-|---|---|---|---|
-| CH-01 | Download event lifecycle | Timestamp event callbacks and download state changes | Event sequence recorded and repeatable |
-| CH-02 | Filename suggestion | Test `onDeterminingFilename` with a benign file | Actual chosen path and API outcome recorded |
-| CH-03 | Pause/resume | Pause and resume downloads at controlled points | State transitions and filesystem observations recorded |
-| CH-04 | File visibility | Inspect whether the file is readable in the normal Downloads location during each state | The first time the file becomes accessible is established |
-| CH-05 | Interrupted/resumed | Interrupt and resume benign downloads | No incorrect state or premature completion assumption |
-| CH-06 | Cancelled download | Cancel at different stages | Cancellation and partial-file cleanup behaviour recorded |
-| CH-07 | Repetition/race | Repeat tests across small and larger benign files | Consistency and race conditions documented |
-
-**Critical interpretation:** A paused download state, a suggested filename, or an event callback is not by itself proof of quarantine. The acceptance criterion for a pre-release protection claim is observed, repeatable prevention of user access before the decision. If this cannot be demonstrated, the implementation and dissertation must use the user-selected completed-file workflow and state its narrower protection boundary.
-
-Record Chrome version, operating system, extension version, permissions, test file size and hash, timestamps, destination path, and screenshots/logs. Do not use live malware for this experiment.
-
-## 3. Input validation and PE parsing
-
-| ID | Test input | Expected behaviour |
+| Objective | Evidence | Cannot show |
 |---|---|---|
-| PE-01 | Valid supported benign PE | Parse and produce the documented feature schema |
-| PE-02 | Non-PE file renamed `.exe` | Reject as unsupported/invalid; do not classify as safe |
-| PE-03 | Truncated PE | Return controlled parse error |
-| PE-04 | Malformed header or invalid offsets | Reject safely without crash or unbounded allocation |
-| PE-05 | Empty file | Reject with clear validation result |
-| PE-06 | File at configured size limit | Handle according to documented limit |
-| PE-07 | File above size limit | Reject before expensive processing |
-| PE-08 | Unsupported PE variant or architecture | Return explicit unsupported/inconclusive result |
-| PE-09 | Missing optional PE fields | Apply documented missing-value behaviour |
-| PE-10 | Repeated identical file | Produce deterministic features and result for fixed versions/configuration |
+| O1 | Extraction parity between JavaScript and thrember | Anything about detection |
+| O2 | Detection on labelled EMBER2024 records | Browser correctness, except for groups that passed O1 |
+| O3 | Correct workflow, consent and failure handling | Detection performance |
+| O4 | Recall–upload trade-off, random and oracle comparisons, prototype latency | Performance outside the EMBER2024 test period or under real-world prevalence |
 
-No submitted file should be executed as part of static parsing tests.
+## 2. Chrome feasibility (benign files, disposable profile)
 
-## 4. Feature extraction parity
-
-The browser-side extractor and Python reference extractor must implement the same versioned feature specification.
-
-- Define each feature's name, type, source field, bounds, missing-value handling, and transformation.
-- Prepare an authorised set of benign PE files covering supported variations.
-- Run both extractors on identical file bytes.
-- Compare feature names, ordering, values, types, and missing-value representation.
-- Define numeric tolerances before comparing floating-point values.
-- Investigate every mismatch; do not silently discard inconvenient cases.
-
-**Minimum evidence:** feature schema document, test corpus manifest containing hashes (not malware binaries), machine-readable comparison output, mismatch analysis, and automated parity tests.
-
-## 5. Local classifier evaluation
-
-Use a documented, authorised dataset. Before training, record:
-
-- Dataset name/version, source, access date, licence/terms, permitted research use, labels, and known limitations.
-- File counts by class and any exclusions.
-- Hash-based duplicate detection and, where feasible, near-duplicate checks.
-- Train/validation/test split method and random seed.
-- Any family, source, time, or collection grouping used to reduce leakage.
-
-Establish a simple baseline first. Candidate models should be compared only when justified by the data and project time.
-
-Report at minimum:
-
-- Confusion matrix.
-- Precision, recall, and F1-score.
-- False-positive rate and false-negative rate.
-- ROC-AUC or PR-AUC where appropriate.
-- Threshold-selection method.
-- Inference time and resource use.
-- Error analysis, including representative false positives and false negatives.
-
-Use validation data for model and threshold selection. Keep the final test set held out until the evaluation protocol is frozen. Do not claim zero-day detection from a random split or a high test score alone.
-
-## 6. Local inference and robustness
-
-| ID | Test | Evidence |
+| ID | Test | Acceptance |
 |---|---|---|
-| ML-01 | Valid feature vector | Expected prediction schema and model version |
-| ML-02 | Missing or extra feature | Controlled validation error |
-| ML-03 | Wrong feature order/schema version | Rejection or explicit schema conversion |
-| ML-04 | Low-confidence result | Marked inconclusive according to validation-defined policy |
-| ML-05 | Repeated inference | Deterministic output for fixed model and input |
-| ML-06 | Large supported file | Processing time and memory measured |
-| ML-07 | Parser/model failure | No crash into a misleading safe state |
+| CH-01 | Event sequence with timestamps | Recorded and repeatable |
+| CH-02 | Delaying filename determination | Outcome recorded |
+| CH-03 | Pause, resume, cancel | State and filesystem observations recorded |
+| CH-04 | When the file becomes readable in Downloads | Established for each state |
+| CH-05 | Analysed bytes vs delivered bytes | Digests compared |
+| CH-06 | Service-worker restart; concurrent downloads | Behaviour recorded |
 
-## 7. Consent-gated server escalation (if implemented)
+Pre-release analysis is adopted only if the file is inaccessible until a decision and the analysed bytes equal the delivered bytes, repeatably. Otherwise the user-selected workflow is the only workflow.
 
-| ID | Test | Expected behaviour |
+## 3. Input validation
+
+| ID | Input | Expected |
 |---|---|---|
-| SRV-01 | User declines escalation | No file content is transmitted |
-| SRV-02 | User explicitly consents | Only the selected file is sent to the configured endpoint |
-| SRV-03 | Server unavailable | Clear error; preserve local result and do not label file safe |
-| SRV-04 | Request timeout | Controlled timeout and cleanup |
-| SRV-05 | Oversized/malformed request | Rejected within defined limits |
-| SRV-06 | Unauthorised request | Rejected |
-| SRV-07 | Server result | Display source, model/version, and uncertainty |
-| SRV-08 | Retention/deletion | Verify documented temporary-file retention and cleanup |
+| PE-01 | Valid benign PE | Features extracted |
+| PE-02 | Non-PE renamed `.exe` | UNSCANNED |
+| PE-03 | Truncated PE | UNSCANNED, no crash |
+| PE-04 | Invalid offsets or headers | UNSCANNED, bounded memory |
+| PE-05 | Empty file | UNSCANNED |
+| PE-06 | Above size limit | UNSCANNED before parsing |
+| PE-07 | Same file twice | Identical features and result |
 
-Capture network evidence showing that declining consent results in no file upload. Do not send research files to an unapproved third-party service.
+No file is ever executed.
 
-## 8. End-to-end and usability tests
+## 4. Feature parity (O1)
 
-Test the supported user journey from file selection to local result, including:
+**Corpus:** benign files from clean Windows installations and licensed open-source builds; files built for the purpose (32-bit, 64-bit, .NET, signed, packed); systematically truncated and corrupted variants. Each recorded with SHA-256, source and licence. No malware binaries, so parity on unusual malicious structures is covered only indirectly (stated limitation).
 
-- Supported benign PE.
-- Invalid or unsupported file.
-- Local inconclusive result.
-- User declines escalation.
-- User consents and server returns a result (if implemented).
-- Server unavailable or times out (if implemented).
+**Rules (fixed before testing):**
 
-The interface must distinguish analysis failure, inconclusive assessment, and a positive or negative classifier output. It must not promise that a file has been blocked or quarantined unless the relevant browser behaviour has passed the staging feasibility gate.
+| Feature type | Rule |
+|---|---|
+| Integer | Exact equality |
+| Categorical | Exact equality of the encoded value |
+| Floating point | Compared as 32-bit floats (the reference casts its final vector to float32). Differences reported in ULP; a group whose only differences are 1 ULP passes only if local-model predictions on the corpus are unchanged |
+| Array / hashed | Length and order first, then element-wise; same hash function and sign convention as scikit-learn `FeatureHasher` |
 
-## 9. Experimental controls and reproducibility
+A group that fails is excluded from the local model by design; an extraction failure on a particular file produces UNSCANNED.
 
-- Record software versions, operating system, hardware, model version, configuration, and random seeds.
-- Freeze feature definitions and evaluation protocol before final testing.
-- Keep training, validation, and test sets separate.
-- Check for duplicate and near-duplicate files across splits.
-- Do not tune repeatedly against the held-out test set.
-- Store scripts, configuration, sanitised metrics, and test manifests where licensing permits.
-- Record negative results and deviations from the plan.
+**Expected difficulty (planning expectation, not a result):** byte-level groups (general, byte histogram, byte-entropy) most straightforward; strings depend on Python regex behaviour; header, section, data-directory, import, export and rich-header groups depend on pefile behaviour; Authenticode (signify) and PE-format warnings (pefile messages) expected to be impractical.
 
-## 10. Safety, privacy, and repository hygiene
+**Evidence:** corpus manifest (hashes, not binaries), machine-readable comparison output, mismatch analysis, automated tests.
 
-- Use benign files for browser workflow tests.
-- Use only authorised datasets and follow their handling requirements.
-- Do not execute malware samples on a personal or production device.
-- Do not commit malware binaries, confidential files, credentials, tokens, or raw logs containing personal data.
-- Keep server upload off by default and require explicit per-file consent.
-- Avoid logging file contents; retain only the minimum metadata needed for reproducibility.
-- Verify temporary-file cleanup and document retention.
+## 5. Model-inference equivalence
 
-## 11. Results reporting
+| ID | Test | Acceptance |
+|---|---|---|
+| ML-01 | JavaScript evaluator vs Python on identical EMBER2024 vectors of both classes | Raw scores equal; any probability difference reported |
+| ML-02 | Categorical splits and missing values | Covered by ML-01 vectors |
+| ML-03 | Exported model size and browser load/inference time | Measured and reported |
+| ML-04 | Wrong feature count or schema version | Rejected → UNSCANNED |
 
-Store sanitised experiment outputs under `results/`. Each experiment record should include:
+## 6. Data audit and split
 
-- Test or experiment ID and date.
-- Research question/objective addressed.
-- Environment and software versions.
-- Dataset/test input manifest and hashes where permitted.
-- Procedure and configuration.
-- Actual outcome, metrics, and evidence location.
-- Failures, deviations, and limitations.
+- Week of each record = whole days between its first-submission timestamp and 2023-09-24, divided by seven (official weeks 0–63). This project numbers weeks from 1 (week *n* = official week *n* − 1).
+- Confirm training-file records fall in weeks 0–51 and test-file records in 52–63; count labelled records per week and class, and unlabelled records (label −1).
+- Proposed split: training 1–40, validation 41–46, calibration 47–52, test 53–64; used only if the audit confirms it.
+- Test weeks are never used for training, feature selection, early stopping, calibration or thresholds. The reference `train_model` random 10% validation split is not used. The challenge set is reported separately.
 
-A test is complete only when the procedure has been run and its evidence reviewed. A planned test, code stub, or screenshot of an interface is not proof of detection performance or secure quarantine.
+## 7. Routing evaluation (O4)
+
+**Definitions:** upload rate = escalated test files / test files; recall = malicious files classed malicious by the system / malicious files; realised false-positive rate = benign files classed malicious / benign files. The offline evaluation assumes consent for every escalation (the largest possible upload count).
+
+**Operating points:** 1% false-positive rate (primary), 0.1% (secondary; weekly reporting at 0.1% only if the audited benign counts make it meaningful). Thresholds meet the operating point on calibration weeks; the realised test false-positive rate is reported with Wilson intervals.
+
+**Strategies:**
+
+1. Always Local — local model at its operating-point threshold.
+2. Always Server — server model at its operating-point threshold.
+3. Confidence Routing — for each budget in 5% steps, lower and upper thresholds chosen on calibration weeks to maximise recall with overall false-positive rate at or below the operating point.
+4. Random Routing — escalates exactly the same number of test files as Confidence Routing, uniformly at random from the same test population; other files decided locally. Repeated with recorded seeds; mean and 2.5th/97.5th percentiles reported.
+5. Oracle Routing — offline, non-deployable upper bound using true labels to escalate first the files the local model misclassifies and the server classifies correctly.
+
+**Repetitions:** chosen before the test by a stability test on calibration-week scores (100, 200, 500, 1,000); the smallest number whose mean and percentiles change by less than a tolerance fixed in advance. The tolerance is recorded with the results.
+
+**Superiority criterion (supervisor-approved):** Confidence Routing is better than Random Routing at an upload count only if its recall is higher, its realised false-positive rate is no higher, and a 95% week-level block-bootstrap interval for the recall difference lies above zero. The block bootstrap resamples the 12 test weeks with replacement as whole weeks a fixed number of times; matching upload counts alone does not establish superiority.
+
+**Also reported:** per-week recall and false-positive rate for every strategy; margin δ (SD of Always-Server weekly recall on validation weeks) and the answer to SQ2.
+
+## 8. Server and failure injection (O3)
+
+| ID | Test | Expected |
+|---|---|---|
+| SRV-01 | User declines | No file content transmitted (network capture); UNSCANNED |
+| SRV-02 | User consents | Only the selected file and its digest sent; filename not sent |
+| SRV-03 | Server unavailable | UNSCANNED |
+| SRV-04 | Timeout | UNSCANNED; cleanup |
+| SRV-05 | Malformed or schema-invalid reply | UNSCANNED |
+| SRV-06 | Digest mismatch | UNSCANNED |
+| SRV-07 | Unauthorised or oversized request | Rejected by server |
+| SRV-08 | Temporary-file cleanup | Files deleted after analysis |
+| SRV-09 | Service-worker termination mid-analysis | UNSCANNED or resumed; never benign |
+
+Completion: every defined failure state ends in UNSCANNED.
+
+## 9. Latency (O4)
+
+Measure local inference, end-to-end analysis time and server round-trip latency in the prototype, with hardware and browser versions recorded. Reported as measurements, not targets.
+
+## 10. Reproducibility and hygiene
+
+Record software versions, hardware, seeds and configuration; freeze the protocol before using the test weeks; record negative results and deviations; never commit malware, credentials or file contents.

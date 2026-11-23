@@ -1,140 +1,120 @@
-# SENTINELPE: Local-First Browser-Based Static PE Malware Detection
+# SentinelPE: A Local-First Browser-Based System for Static PE Malware Detection
 
-A Final Year Project (FYP) investigating a local-first browser-integrated system for static malware detection of Windows Portable Executable (PE) files.
+A Final Year Project (FYP) at Asia Pacific University of Technology & Innovation (APU), Malaysia.
 
-> **Project status:** Research and feasibility stage. The repository currently contains planning documentation only. No functioning extension, feature extractor, classifier, server escalation service, or evaluated model is claimed to exist.
+> **Project status:** investigation stage. This repository contains planning and design documentation only. No extension, feature extractor, classifier, server or evaluation pipeline has been implemented, and no experimental result is claimed. Status must be updated only when code and reproducible evidence exist.
 
 ## 1. Project overview
 
-Windows PE files, particularly executable files such as `.exe` and `.dll`, can carry malicious code. Users may download and open these files without having enough information to assess their risk. This project investigates whether a browser-based workflow can provide an initial local static assessment and, when the local result is uncertain and the user consents, request a stronger assessment from a separate server-side classifier.
+SentinelPE investigates whether a browser-compatible classifier can decide most Windows Portable Executable (PE) files locally and escalate only uncertain files to a stronger server-side classifier, with explicit user consent before any file leaves the device.
 
-The design is **local-first**: the initial assessment is intended to run locally in the browser environment. File contents should not be sent to a remote service automatically. Any server-side escalation must be explicit, explained to the user, and limited to the file selected for analysis.
+The proposed workflow:
 
-The project is being developed as an undergraduate cybersecurity FYP at Asia Pacific University of Technology & Innovation (APU), Malaysia. The implementation and evaluation scope must remain achievable within the October 2026–May 2027 project period.
+1. The user selects a PE file (`.exe` or `.dll`) in a Chrome Manifest V3 extension page.
+2. The extension validates the PE structure, computes the file's SHA-256 digest and extracts static features in JavaScript.
+3. A compact LightGBM model produces an uncalibrated predicted probability *s*.
+4. If *s* lies outside an escalation band defined by two thresholds, the verdict is returned locally.
+5. If *s* lies inside the band, the user is asked whether that file may be sent to the server.
+6. With consent, the FastAPI server classifies the file with a full-feature LightGBM model and returns a verdict, model version, SHAP attributions and the digest of the bytes it analysed.
+7. If the user declines, or any step fails, the file is reported as **UNSCANNED** and is never presented as safe.
 
 ## 2. Problem statement
 
-Many users lack accessible, understandable information about the risk of downloaded Windows executable files. Conventional file reputation and signature-based approaches may not provide a useful assessment for every file, while server-side analysis can raise privacy and data-handling concerns. A local-first approach may reduce unnecessary file disclosure, but it introduces technical challenges: extracting consistent PE features in a browser, maintaining acceptable analysis performance, and deciding when local confidence is insufficient.
-
-A further challenge is the browser download lifecycle. Chrome extension APIs must be tested before the project claims that a download can be held in quarantine before becoming accessible to the user. The system must not promise prevention or pre-release protection unless that behaviour is demonstrated experimentally.
+Users who download Windows executables lack an evaluated way to obtain a content-based static assessment that is computed mainly on their own device, that uploads a file only when the local result is uncertain and the user agrees, and that never presents a failed or skipped analysis as safe. Deployed browser and operating-system protections rely largely on reputation or vendor-side scanning. Research on escalation from cheap to expensive analysis has measured computational cost rather than file disclosure, and the reviewed PE classifiers operate on pre-extracted features without demonstrating that those features can be recomputed in a browser.
 
 ## 3. Aim
 
-To design, implement, and evaluate a local-first browser-based prototype for static malware detection of supported Windows PE files, with optional consent-based escalation to a server-side classifier when the local assessment is inconclusive.
+To design and evaluate a local-first browser-based prototype that detects malicious Windows PE files through static analysis, using browser-verified features and a compact local classifier, escalates uncertain files to a server classifier only with explicit user consent, and measures the resulting trade-off between server uploads and malware detection.
 
-## 4. Proposed objectives
+## 4. Objectives
 
-1. Review recent research on static PE malware detection, browser-based security, lightweight machine-learning inference, and privacy-aware analysis.
-2. Design a Chrome Manifest V3 extension workflow for supported PE files and investigate the practical limits of download interception and staging.
-3. Implement a bounded PE feature-extraction process and a lightweight local classifier for an initial risk assessment.
-4. Implement an optional, consent-based mechanism for escalating uncertain cases to a server-side classifier, with clear file-transfer and privacy information.
-5. Evaluate feature-extraction consistency, classification performance, false-positive behaviour, processing time, and workflow reliability using documented and authorised data.
-6. Compare the proposed approach with simple baselines and report limitations without making unsupported zero-day or prevention claims.
+| ID | Objective | Completion criterion |
+|---|---|---|
+| O1 | Implement a JavaScript extractor for the EMBER2024 feature set and determine, for each of its twelve feature groups, whether it reproduces the reference Python extractor (thrember) on a documented corpus of benign and systematically malformed PE files, under agreement rules fixed before testing. | Every feature group classed as pass or fail, with mismatches documented. |
+| O2 | Train, on chronological EMBER2024 splits, a full-feature server classifier and a compact local classifier restricted to the feature groups that pass O1, and measure their recall and false-positive rate, the local model's size and its browser inference latency. | Recall and realised false-positive rate reported for both models on the test weeks; size and latency measured. |
+| O3 | Implement a Chrome MV3 extension and a FastAPI service with local classification, threshold-based escalation, explicit per-file consent and server-side SHAP explanations, and verify by failure-injection testing that every defined failure state produces UNSCANNED. | Every defined failure state ends in UNSCANNED; no upload occurs without consent. |
+| O4 | Evaluate, on the held-out EMBER2024 test weeks, recall and realised false-positive rate as a function of upload rate for confidence-based routing against Always Local, Always Server, repeated random routing that escalates the same number of files, and Oracle Routing (non-deployable upper bound), and measure end-to-end and server round-trip latency in the prototype. | Curves and comparisons reported for all strategies, latency measured, and SQ2 answered positively or negatively. |
 
-These objectives are provisional until confirmed against the supervisor-approved proposal and final assessment requirements.
+Quantities such as model size, latency and upload rate are measured and reported, not promised as targets.
 
-## 5. Scope and exclusions
+### Mapping to the approved proposal
 
-### Included
+The approved proposal has five objectives; the APU Investigation Report guidelines allow at most four. The restructuring below was approved by the supervisor.
 
-- Windows Portable Executable (PE) files within the explicitly supported test scope, initially `.exe` and `.dll`.
-- Static analysis of PE metadata and selected structural features.
-- A browser extension prototype using Chrome Manifest V3.
-- A lightweight local feature extraction and classification path.
-- Optional server-side classification only after an explicit user decision.
-- Evaluation using authorised datasets and benign test files.
-- User-facing results that communicate confidence, limitations, and next steps.
-
-### Excluded from the current FYP scope
-
-- Dynamic execution of submitted files.
-- Behavioural malware analysis and execution sandboxes.
-- URL reputation or phishing detection.
-- Archive extraction and recursive archive scanning.
-- A claim that all downloads are securely quarantined before they reach the normal Downloads folder.
-- Automatic upload of downloaded files to a remote service.
-- Production-grade antivirus replacement or guaranteed malware prevention.
-
-Any proposed scope change requires supervisor agreement and a documented rationale.
-
-## 6. Proposed system workflow
-
-1. The extension identifies a supported PE file in the tested browser workflow or the user explicitly selects a file for analysis.
-2. The system validates the file type and size and extracts the defined static PE features.
-3. The local classifier returns a result and confidence or uncertainty measure.
-4. If the local result meets the defined decision threshold, the extension presents the local assessment and its limitations.
-5. If the result is uncertain, the user may explicitly consent to sending the file to the configured server-side classifier. Declining must remain possible.
-6. The server returns a structured assessment; the extension presents it separately from the local result.
-7. Temporary data is removed according to the documented retention policy.
-
-**Important:** The exact download-handling sequence depends on the Chrome feasibility experiment. Until pre-release staging is demonstrated, the safe baseline workflow is user-initiated analysis of a completed or otherwise accessible file. The project will describe the actual tested protection boundary, not imply that a browser event listener is equivalent to quarantine.
-
-## 7. Research questions
-
-- **RQ1:** To what extent can a Chrome Manifest V3 extension support a reliable and privacy-conscious workflow for analysing downloaded Windows PE files?
-- **RQ2:** How accurately can selected static PE features support lightweight local malware classification compared with simple baselines?
-- **RQ3:** What performance and privacy trade-offs arise when uncertain local assessments are optionally escalated to a server-side classifier?
-- **RQ4:** How consistent are the PE features extracted by the browser-side implementation and the reference feature-extraction pipeline?
-
-## 8. Evaluation approach
-
-The evaluation will use authorised datasets and a reproducible methodology. The exact dataset, feature set, model, thresholds, and split strategy must be recorded before final testing.
-
-Candidate measures include:
-
-- Confusion matrix, precision, recall, F1-score, false-positive rate, and false-negative rate.
-- ROC-AUC or PR-AUC where appropriate for the dataset and class distribution.
-- Browser-side feature-extraction agreement against a reference implementation.
-- Local inference time and, where applicable, server response time.
-- File-size limits, memory use, failure rate, and behaviour for malformed or unsupported inputs.
-- User-consent and file-transfer workflow correctness.
-
-Dataset provenance, licence and permitted use, label definitions, duplicates, class balance, and train/validation/test separation must be documented. Avoid leakage between splits. Do not claim zero-day detection unless a separate, defensible temporal or family-held-out evaluation supports that claim.
-
-## 9. Technology direction
-
-| Area | Initial direction |
+| Approved proposal objective | Addressed by |
 |---|---|
-| Browser integration | Chrome Extension, Manifest V3 |
-| Local feature extraction | JavaScript/TypeScript; exact implementation to be selected |
-| Local inference | Lightweight model suitable for browser execution |
-| Server-side classifier | Python service, optional and consent-gated |
-| PE reference processing | Documented Python tooling |
-| Testing | Unit, feature-parity, integration, and controlled evaluation tests |
-| Documentation | Markdown, experiment records, and architecture decisions |
+| 1. Investigate static PE detection techniques, browser-based security approaches and their limitations | Chapter 2 of the Investigation Report |
+| 2. Lightweight local model using browser-computable static features | O1, O2 |
+| 3. Confidence-based routing between local and server classification | O3 (implementation), O4 (evaluation) |
+| 4. Server-side analysis component with SHAP explanations | O2 (server model), O3 (FastAPI and SHAP) |
+| 5. Evaluation of detection, false-positive rate, upload reduction, latency, temporal robustness and routing effectiveness | O2, O4 |
 
-Technology choices remain provisional until feasibility and baseline experiments are completed.
+## 5. Research questions
 
-## 10. Repository structure
+**Main question:** At a fixed false-positive rate, how does malware recall vary with the proportion of files uploaded when a browser-compatible local PE classifier escalates its least-confident predictions to a server classifier, and does confidence-based escalation achieve higher recall than random escalation at the same upload rate?
 
-- `extension/` — Manifest V3 extension and browser-side workflow.
-- `backend/` — optional server-side classification API.
-- `ml/` — dataset preparation, reference feature extraction, training, and evaluation.
-- `tests/` — unit, integration, parity, and workflow tests.
-- `docs/research/` — literature review and research notes.
-- `docs/architecture.md` — proposed architecture and trust boundaries.
-- `docs/roadmap.md` — October 2026–May 2027 development roadmap.
-- `docs/testing-plan.md` — test strategy and evaluation criteria.
-- `docs/decisions/` — architecture decision records.
-- `results/` — sanitised metrics and experiment notes only.
+- **SQ1 (O1):** Which EMBER2024 feature groups can be reproduced from raw PE bytes in browser JavaScript with exact agreement with the reference Python extractor?
+- **SQ2 (O4):** What is the smallest upload rate at which the recall of confidence-based routing falls within a margin δ of Always-Server recall, where δ is the week-to-week standard deviation of Always-Server recall on the validation weeks?
 
-Legacy `sandbox/` material, if present, is not part of the current implementation scope.
+The question remains answerable whatever the outcome: if no upload rate below 100% meets the margin, that is a finding, and the curves and the random-escalation comparison are still reported.
 
-## 11. Safe research and privacy practices
+## 6. Scope
 
-- Do not commit malware samples, credentials, access tokens, private keys, or personal data.
-- Do not execute untrusted files on a personal or university production machine.
-- Use datasets only where their licence and terms permit the intended research use.
-- Keep server escalation disabled unless the user explicitly consents to the specific transfer.
-- Explain what data is sent, where it is processed, and how long it is retained.
-- Do not store full file contents in application logs.
-- Treat classifier output as an uncertain assessment, not proof that a file is safe or malicious.
-- Record failed experiments and limitations as well as successful results.
+**Included:** static analysis of Windows PE files; feature-parity testing on benign and deliberately malformed files; server and local LightGBM models on EMBER2024; routing evaluation including an offline oracle upper bound; user-selected file analysis in a Chrome extension; per-file consent before upload; UNSCANNED on any failure; server-side SHAP attributions; technical experiments and document analysis.
 
-## 12. Current status
+**Excluded:** executing or detonating files; handling live malware binaries; dynamic or behavioural sandboxing; URL, archive and non-PE formats; automatic uploads; claims of zero-day or guaranteed detection; a claim of pre-release quarantine unless the feasibility test demonstrates it; explanations computed in the browser; surveys, interviews or other research with human participants.
 
-The current branch is a documentation realignment. The default branch's initial repository setup contained planning files and workspace placeholders. This documentation does not claim that the extension, PE parser, local classifier, server API, or tests have been implemented. Implementation status must be updated only when code and reproducible evidence exist.
+**Workflow boundary (supervisor-approved):** the deliverable workflow analyses a file that the user selects after it has been downloaded. Interception of downloads before release is investigated as a feasibility question and adopted only if demonstrated. The Chrome downloads API provides no method that returns a downloaded file's contents.
+
+## 7. Evaluation design (summary)
+
+Full detail is in [`docs/testing-plan.md`](docs/testing-plan.md).
+
+- **Dataset:** EMBER2024 PE subsets (Win32, Win64, .NET): 2,340,000 training and 540,000 test records, 2,568 features in 12 groups. EMBER2024 provides feature records and labels, not binaries.
+- **Proposed split** (weeks numbered from 1; official weeks are 0–63): training 1–40, validation 41–46, calibration 47–52, test 53–64. Used only if a planned data audit confirms the per-week counts. The official `train_model` function's random 10% validation split is not used.
+- **Operating points:** 1% false-positive rate (primary) and 0.1% (secondary). Thresholds are fixed on calibration weeks; the realised test false-positive rate is reported with Wilson intervals.
+- **Strategies:** Always Local, Always Server, Confidence Routing, Random Routing (same number of escalated files, same test population, repeated with recorded seeds), Oracle Routing (non-deployable upper bound).
+- **Superiority criterion (supervisor-approved):** Confidence Routing is better than Random Routing at an upload count only if its recall is higher, its realised false-positive rate is no higher, and a 95% week-level block-bootstrap interval for the recall difference lies above zero.
+
+## 8. Technology
+
+| Area | Choice | Status |
+|---|---|---|
+| Browser | Chrome, Manifest V3; File API for user-selected files | Proposed |
+| Local features | JavaScript extractor, checked against thrember | Proposed |
+| Local inference | LightGBM model exported with `dump_model()` (JSON) and evaluated in JavaScript; equivalence with Python predictions must be validated | Proposed |
+| Server | Python, FastAPI, LightGBM, SHAP via LightGBM feature contributions | Proposed |
+| Reference pipeline | Python, thrember, scikit-learn | Proposed |
+
+## 9. Repository structure
+
+- `extension/` — Manifest V3 extension (not started).
+- `backend/` — FastAPI server (not started).
+- `ml/` — data audit, reference extraction, training and evaluation (not started).
+- `tests/` — parity, unit, integration and failure-injection tests (not started).
+- `docs/architecture.md` — proposed architecture, data flow and failure states.
+- `docs/roadmap.md` — December 2026–May 2027 plan.
+- `docs/testing-plan.md` — test and evaluation protocol.
+- `docs/research/` — research gap and verified literature notes.
+- `docs/decisions/` — decision records.
+- `results/` — sanitised experiment outputs only.
+
+## 10. Open decisions
+
+- Assumed malware-prevalence values for an upload-rate sensitivity analysis (not yet decided).
+- The tolerance for choosing the number of random-routing repetitions (fixed before the stability test).
+- Consent as a formal core requirement, Chapter 3 without human participants, and the ethics-form declaration (supervisor confirmation pending).
+
+## 11. Safe research practice
+
+- Do not commit malware samples, credentials, tokens or personal data.
+- Never execute submitted or test files.
+- Use datasets only within their licence terms; record each dataset's licence before use.
+- Keep uploads off by default and require explicit per-file consent.
+- Do not log file contents.
+- Treat every classifier output as uncertain evidence, not proof.
+- Record failed experiments and limitations as well as successes.
 
 ## Licence
 
-The repository currently uses the MIT License. Confirm university ownership requirements and review third-party code, dataset, and dependency licences before redistribution.
+MIT License. Review university ownership requirements and third-party licences before redistribution.
