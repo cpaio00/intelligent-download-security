@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SentinelPE</title><link rel="stylesheet" href="app.css"></head>
+<body>
+<header><h1>SentinelPE</h1><p class="sub">Research prototype for static analysis of Windows PE files. Not antivirus. No result proves a file is safe.</p></header>
+<div id="model-banner" class="banner" hidden></div>
+<main>
+  <section class="card">
+    <h2>Analyse a file</h2>
+    <p>Choose a <code>.exe</code> or <code>.dll</code> you have already downloaded. It is read on this device and never run.</p>
+    <label class="drop" id="drop"><input type="file" id="file" accept=".exe,.dll,application/vnd.microsoft.portable-executable,application/x-msdownload"><span>Choose a file or drop it here</span></label>
+    <div id="progress" class="muted" aria-live="polite"></div>
+  </section>
+  <section class="card" id="consent" hidden>
+    <h2>Local result is inconclusive</h2>
+    <p>The local model is not confident about <strong id="consent-name"></strong>. You can send this file to the analysis server for a stronger check.</p>
+    <ul class="muted"><li>Sent: the file's bytes and its SHA-256 digest. The file name is not sent.</li>
+      <li>Server: <code id="consent-server"></code> (it also sees your IP address and the time).</li>
+      <li>If you do not send it, the result is <strong>UNSCANNED</strong>.</li></ul>
+    <div class="row"><button id="send" class="primary">Send this file</button><button id="decline">Don't send</button></div>
+  </section>
+  <section class="card" id="result" hidden aria-live="polite"></section>
+  <details class="card"><summary>Settings</summary>
+    <label>Analysis server URL <input id="server" placeholder="http://127.0.0.1:8000"></label>
+    <label>Access token <input id="token" type="password" autocomplete="off"></label>
+    <label>Escalation band (operating point 1% FPR) <select id="band"></select></label>
+    <div class="row"><button id="save">Save settings</button><span id="saved" class="muted"></span></div>
+  </details>
+</main>
+<script type="module" src="app.js"></script>
+</body></html>

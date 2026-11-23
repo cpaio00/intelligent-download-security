@@ -75,3 +75,8 @@ feasibility/*.npy
 feasibility/*.dat
 feasibility/full_model.txt
 feasibility/*_rows.json
+
+# Generated models (never commit; real models are rebuilt from the pipeline)
+extension/model/*.json
+dev_models/
+ml/out/

@@ -1,0 +1,12 @@
+{
+  "name": "sentinelpe",
+  "private": true,
+  "description": "SentinelPE research prototype: test scripts",
+  "scripts": {
+    "test:js": "node --test \"tests/js/**/*.test.mjs\"",
+    "test:e2e": "node tests/e2e/extension_e2e.js"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

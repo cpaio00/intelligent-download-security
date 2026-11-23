@@ -2,7 +2,7 @@
 
 A Final Year Project (FYP) at Asia Pacific University of Technology & Innovation (APU), Malaysia.
 
-> **Project status:** investigation stage. This repository contains planning and design documentation and an exploratory **feasibility kit** ([`feasibility/`](feasibility/)). No extension, feature extractor, classifier, server or evaluation pipeline of SentinelPE has been implemented, and no experimental result is claimed. The kit's cloud measurements ([`docs/feasibility-audit.md`](docs/feasibility-audit.md)) are feasibility evidence, not project results, and none was taken on the development laptop. Status must be updated only when code and reproducible evidence exist.
+> **Project status:** investigation stage, with an **initial implementation** of the extension, server, research pipeline and automated tests. It is tested only with synthetic development models and benign files, in headless Chromium on Linux. No model has been trained on EMBER2024, and **no experimental result is claimed**. There is also an exploratory **feasibility kit** ([`feasibility/`](feasibility/)). The kit's cloud measurements ([`docs/feasibility-audit.md`](docs/feasibility-audit.md)) are feasibility evidence, not project results, and none was taken on the development laptop. Status must be updated only when code and reproducible evidence exist.
 
 ## 1. Project overview
 
@@ -82,17 +82,17 @@ Full detail is in [`docs/testing-plan.md`](docs/testing-plan.md).
 | Area | Choice | Status |
 |---|---|---|
 | Browser | Chrome, Manifest V3; File API for user-selected files | Proposed |
-| Local features | JavaScript extractor, checked against thrember | Proposed |
-| Local inference | LightGBM model exported with `dump_model()` (JSON) and evaluated in JavaScript; equivalence with Python predictions must be validated | Proposed; method checked on synthetic models only (feasibility kit) |
-| Server | Python, FastAPI, LightGBM, SHAP via LightGBM feature contributions | Proposed |
-| Reference pipeline | Python, thrember, scikit-learn | Proposed |
+| Local features | JavaScript extractor, checked against thrember | Exploratory extractor in use; 768 features pass parity on the feasibility corpus (byteentropy fails; several groups missing) |
+| Local inference | LightGBM model exported with `dump_model()` (JSON) and evaluated in JavaScript; equivalence with Python predictions must be validated | Implemented; bit-identical on synthetic models; not yet validated on the project model |
+| Server | Python, FastAPI, LightGBM, SHAP via LightGBM feature contributions | Initial implementation (`backend/`); synthetic model only |
+| Reference pipeline | Python, thrember, LightGBM (streamed training) | Initial implementation (`ml/`); not yet run on EMBER2024 |
 
 ## 9. Repository structure
 
-- `extension/` — Manifest V3 extension (not started).
-- `backend/` — FastAPI server (not started).
-- `ml/` — data audit, reference extraction, training and evaluation (not started).
-- `tests/` — parity, unit, integration and failure-injection tests (not started).
+- `extension/` — Manifest V3 extension: user-selected file analysis, local model, consent, upload, UNSCANNED on failure (initial implementation).
+- `backend/` — FastAPI analysis server with thrember extraction in an isolated worker and TreeSHAP attributions (initial implementation).
+- `ml/` — `sentinelpe_ml` pipeline: audit, sampling, streamed training, scoring, thresholds, routing evaluation, browser export (initial implementation).
+- `tests/` — Python, JavaScript and end-to-end (Chromium) tests on synthetic models; run in CI (`.github/workflows/tests.yml`).
 - `docs/architecture.md` — proposed architecture, data flow and failure states.
 - `docs/roadmap.md` — December 2026–May 2027 plan.
 - `docs/testing-plan.md` — test and evaluation protocol.
