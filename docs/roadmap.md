@@ -16,17 +16,19 @@ Local-first static detection of Windows PE files with consent-based escalation t
 
 ## Phase 2 — Feasibility and data (December 2026)
 
+- [ ] Run the feasibility kit on the laptop (`feasibility/RUN_ON_LAPTOP.md`, Tests 1–9); record the synthetic memory sweep (TR-01).
 - [ ] Chrome download-interception feasibility test, time-boxed to two weeks (architecture Section 5).
-- [ ] Download EMBER2024 PE subsets; run the data audit (weeks from metadata, labelled counts per week and class, unlabelled records).
+- [ ] Download EMBER2024 PE subsets one at a time, measuring the disk space used (the unzipped size is unverified); vectorise to memory-mapped files; run the data audit (weeks from metadata, labelled counts per week and class, unlabelled records).
+- [ ] Real-data memory sweep (TR-02) and supervisor decision on training size (ADR 0004).
 - [ ] Build the parity corpus manifest (benign and malformed files, with SHA-256, source and licence).
 - [ ] Start the JavaScript feature extractor.
 
-**Exit evidence:** feasibility report and workflow decision; audit tables confirming or revising the split.
+**Exit evidence:** feasibility report and workflow decision; audit tables confirming or revising the split; memory CSVs and the recorded training size *n*.
 
 ## Phase 3 — Parity and server model (January 2027)
 
 - [ ] Complete parity testing for all twelve feature groups (O1).
-- [ ] Train the full-feature server model on weeks 1–40 with validation weeks 41–46.
+- [ ] Train the full-feature server model on weeks 1–40 (the measured subset *n* if ADR 0004 is approved) with validation weeks 41–46.
 
 **Exit evidence:** per-group pass/fail table with mismatch analysis; server model with validation results.
 
@@ -58,7 +60,7 @@ Local-first static detection of Windows PE files with consent-based escalation t
 
 ## Critical path
 
-1. Data audit confirms the split.
+1. Data audit confirms the split, and the laptop memory sweep fixes the training size.
 2. Parity testing decides the local feature set.
 3. Models and frozen thresholds.
 4. Offline routing evaluation (independent of the extension).

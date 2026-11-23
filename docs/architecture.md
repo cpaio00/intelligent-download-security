@@ -29,6 +29,7 @@ The Chrome downloads API reports download events, and `onDeterminingFilename` de
 - A compact LightGBM model trained only on parity-verified feature groups.
 - Proposed deployment: export with LightGBM `dump_model()` (a JSON description of the trees) and evaluate with a JavaScript tree evaluator. Equivalence with Python predictions, including categorical splits and missing values, must be shown on identical EMBER2024 vectors, and the exported file size measured.
 - Output: the **uncalibrated predicted probability *s***.
+- Feasibility note: a JavaScript evaluator reproduced LightGBM 4.7.0 raw scores bit for bit on synthetic models with categorical, missing-value and boundary cases. This is not yet shown for the project model ([`feasibility-audit.md`](feasibility-audit.md), Section 2).
 
 ### 2.4 Routing
 
@@ -44,13 +45,16 @@ Thresholds are fitted on the calibration weeks and then kept fixed. Because Plat
 ### 2.5 Server (FastAPI)
 
 - Accepts a file only after consent for that file; authenticates requests; enforces size limits; checks the PE signature; parses in a resource- and time-limited process; never executes uploads; deletes temporary files after analysis; does not log file contents.
-- Classifies with a full-feature LightGBM model.
+- Classifies with a full-feature LightGBM model. Features come from the same pinned thrember version used to vectorise EMBER2024, so the server needs no parity test.
+- Oversized uploads are refused from the declared `Content-Length`. The client may then see a connection reset rather than a 413 reply, and both must lead to UNSCANNED.
 - Returns verdict, model version, SHAP attributions (LightGBM feature contributions) and the SHA-256 digest of the analysed bytes.
 - Attributions explain how features moved the model's output; they do not show that the prediction is correct or what the program would do when run.
 
 ### 2.6 Python research pipeline
 
 Data audit, reference feature extraction (thrember), training of the server and local models, calibration, threshold fitting and the offline routing evaluation, all with recorded versions and seeds.
+
+Because of the 8 GB laptop, training streams rows from the memory-mapped vectorised file rather than calling thrember's `read_vectorized_features` or `train_model`. Both of those load the full matrix into RAM, and `train_model` also uses a random validation split. See [ADR 0004](decisions/0004-training-size-and-memory.md).
 
 ## 3. Data flow
 
@@ -69,7 +73,7 @@ Local-first processing reduces, but does not remove, the transfer of file conten
 Each of the following ends in **UNSCANNED**, never in a benign verdict:
 
 - Unsupported file type or non-PE input.
-- Invalid, truncated or malformed PE.
+- Invalid, truncated or malformed PE. (Truncated files whose headers parse are currently accepted by both extractors, and their policy is an open decision.)
 - File exceeds the size limit.
 - Local feature extraction failed.
 - Local result inconclusive and the user declined escalation.

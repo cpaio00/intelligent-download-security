@@ -1,6 +1,6 @@
 # SentinelPE Testing and Evaluation Plan
 
-> **Status: proposed protocol.** No test here has been run. Record environment, outputs, failures and evidence before marking a test complete.
+> **Status: proposed protocol.** No test here has been run on the project's implementation or on the development laptop. Exploratory feasibility checks run in a cloud workspace are recorded separately in [`feasibility-audit.md`](feasibility-audit.md) and do not complete any test below. Record environment, outputs, failures and evidence before marking a test complete.
 
 ## 1. Evidence types
 
@@ -32,7 +32,7 @@ Pre-release analysis is adopted only if the file is inaccessible until a decisio
 |---|---|---|
 | PE-01 | Valid benign PE | Features extracted |
 | PE-02 | Non-PE renamed `.exe` | UNSCANNED |
-| PE-03 | Truncated PE | UNSCANNED, no crash |
+| PE-03 | Truncated PE | UNSCANNED, no crash (feasibility finding: truncated files with intact headers are accepted by the exploratory parser and by thrember; policy to be decided) |
 | PE-04 | Invalid offsets or headers | UNSCANNED, bounded memory |
 | PE-05 | Empty file | UNSCANNED |
 | PE-06 | Above size limit | UNSCANNED before parsing |
@@ -59,6 +59,11 @@ A group that fails is excluded from the local model by design; an extraction fai
 
 **Evidence:** corpus manifest (hashes, not binaries), machine-readable comparison output, mismatch analysis, automated tests.
 
+**Tooling (feasibility kit):**
+- `feasibility/corpus_tools/` rebuilds a 106-file benign corpus from pinned, licensed wheels and verifies each file by SHA-256.
+- `feasibility/parity/run_parity.py` applies the rules above group by group.
+- Packed and malware-like structures are still not covered.
+
 ## 5. Model-inference equivalence
 
 | ID | Test | Acceptance |
@@ -67,6 +72,18 @@ A group that fails is excluded from the local model by design; an extraction fai
 | ML-02 | Categorical splits and missing values | Covered by ML-01 vectors |
 | ML-03 | Exported model size and browser load/inference time | Measured and reported |
 | ML-04 | Wrong feature count or schema version | Rejected → UNSCANNED |
+
+**Synthetic stage (method check, not ML-01):** `feasibility/equivalence/` generates six models covering numeric, categorical, NaN, zero-as-missing, `use_missing=false` and boundary inputs, from 50 to 500 trees. It requires bit-identical raw scores in Node and in Chrome, and an empty test set counts as a failure. ML-01 itself still needs EMBER2024 vectors and the project's local model.
+
+## 5a. Training memory (laptop)
+
+| ID | Test | Acceptance |
+|---|---|---|
+| TR-01 | Synthetic sweep (`feasibility/memory/memory_sweep.py`), increasing row counts, other programs closed | CSV with peak private memory, minimum available memory, page-file growth, build and training time, parameters and exit status for each size |
+| TR-02 | Same sweep on real `X_train.dat` with a labelled training-week index and the reference categorical features | Training size *n* chosen by the rule in ADR 0004 and recorded before training |
+| TR-03 | Confirmation run at *n* with normal background programs | Completes without Windows instability; outcome recorded |
+
+Any freeze, forced close or monitor stop is recorded as a result, not discarded.
 
 ## 6. Data audit and split
 
@@ -105,7 +122,7 @@ A group that fails is excluded from the local model by design; an extraction fai
 | SRV-04 | Timeout | UNSCANNED; cleanup |
 | SRV-05 | Malformed or schema-invalid reply | UNSCANNED |
 | SRV-06 | Digest mismatch | UNSCANNED |
-| SRV-07 | Unauthorised or oversized request | Rejected by server |
+| SRV-07 | Unauthorised or oversized request | Rejected by server (oversized may surface as a connection reset; the client must show UNSCANNED) |
 | SRV-08 | Temporary-file cleanup | Files deleted after analysis |
 | SRV-09 | Service-worker termination mid-analysis | UNSCANNED or resumed; never benign |
 

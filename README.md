@@ -2,7 +2,7 @@
 
 A Final Year Project (FYP) at Asia Pacific University of Technology & Innovation (APU), Malaysia.
 
-> **Project status:** investigation stage. This repository contains planning and design documentation only. No extension, feature extractor, classifier, server or evaluation pipeline has been implemented, and no experimental result is claimed. Status must be updated only when code and reproducible evidence exist.
+> **Project status:** investigation stage. This repository contains planning and design documentation and an exploratory **feasibility kit** ([`feasibility/`](feasibility/)). No extension, feature extractor, classifier, server or evaluation pipeline of SentinelPE has been implemented, and no experimental result is claimed. The kit's cloud measurements ([`docs/feasibility-audit.md`](docs/feasibility-audit.md)) are feasibility evidence, not project results, and none was taken on the development laptop. Status must be updated only when code and reproducible evidence exist.
 
 ## 1. Project overview
 
@@ -70,7 +70,8 @@ The question remains answerable whatever the outcome: if no upload rate below 10
 
 Full detail is in [`docs/testing-plan.md`](docs/testing-plan.md).
 
-- **Dataset:** EMBER2024 PE subsets (Win32, Win64, .NET): 2,340,000 training and 540,000 test records, 2,568 features in 12 groups. EMBER2024 provides feature records and labels, not binaries.
+- **Dataset:** EMBER2024 PE subsets (Win32, Win64, .NET): 2,340,000 training and 540,000 test records, 2,568 features in 12 groups. EMBER2024 provides feature records and labels, not binaries. The PE zips total about 23.1 GB.
+- **Training size:** the development laptop has 8 GB RAM, and full-data training is unlikely to fit (estimate). The training size will be measured on the laptop, not assumed. The proposed approach ([ADR 0004](docs/decisions/0004-training-size-and-memory.md)) awaits supervisor approval. Validation, calibration and test weeks stay complete.
 - **Proposed split** (weeks numbered from 1; official weeks are 0–63): training 1–40, validation 41–46, calibration 47–52, test 53–64. Used only if a planned data audit confirms the per-week counts. The official `train_model` function's random 10% validation split is not used.
 - **Operating points:** 1% false-positive rate (primary) and 0.1% (secondary). Thresholds are fixed on calibration weeks; the realised test false-positive rate is reported with Wilson intervals.
 - **Strategies:** Always Local, Always Server, Confidence Routing, Random Routing (same number of escalated files, same test population, repeated with recorded seeds), Oracle Routing (non-deployable upper bound).
@@ -82,7 +83,7 @@ Full detail is in [`docs/testing-plan.md`](docs/testing-plan.md).
 |---|---|---|
 | Browser | Chrome, Manifest V3; File API for user-selected files | Proposed |
 | Local features | JavaScript extractor, checked against thrember | Proposed |
-| Local inference | LightGBM model exported with `dump_model()` (JSON) and evaluated in JavaScript; equivalence with Python predictions must be validated | Proposed |
+| Local inference | LightGBM model exported with `dump_model()` (JSON) and evaluated in JavaScript; equivalence with Python predictions must be validated | Proposed; method checked on synthetic models only (feasibility kit) |
 | Server | Python, FastAPI, LightGBM, SHAP via LightGBM feature contributions | Proposed |
 | Reference pipeline | Python, thrember, scikit-learn | Proposed |
 
@@ -98,12 +99,20 @@ Full detail is in [`docs/testing-plan.md`](docs/testing-plan.md).
 - `docs/research/` — research gap and verified literature notes.
 - `docs/decisions/` — decision records.
 - `results/` — sanitised experiment outputs only.
+- `feasibility/` — exploratory feasibility kit (AI-assisted, not the deliverable) with Windows instructions in `RUN_ON_LAPTOP.md`.
+- `docs/feasibility-audit.md` — feasibility findings, each labelled with its evidence class.
 
 ## 10. Open decisions
 
 - Assumed malware-prevalence values for an upload-rate sensitivity analysis (not yet decided).
 - The tolerance for choosing the number of random-routing repetitions (fixed before the stability test).
 - Consent as a formal core requirement, Chapter 3 without human participants, and the ethics-form declaration (supervisor confirmation pending).
+- Training on a measured, week-stratified subset of weeks 1–40, or training the server model on other hardware ([ADR 0004](docs/decisions/0004-training-size-and-memory.md); supervisor approval pending).
+- Local feature set: limited to groups that pass parity. The exploratory prototype gives 768 features at present, with byteentropy failing.
+- Truncated files whose headers parse: accept them, as thrember does, or report UNSCANNED (test PE-03).
+- Files the JS parser rejects but the server could analyse: UNSCANNED only, or UNSCANNED with an offer to upload.
+- Early stopping: fixed rounds with batch-scored validation, or an in-training validation Dataset (more memory).
+- Upload size limit: 50 MB was used in the feasibility benchmark, but the final limit is not yet confirmed.
 
 ## 11. Safe research practice
 

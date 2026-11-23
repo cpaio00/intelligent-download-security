@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><title>LightGBM JS equivalence (browser)</title>
+<h1>LightGBM JavaScript equivalence test</h1><pre id="out">running…</pre>
+<script type="module">
+import { prepare, rawScore } from './lgbm_eval.mjs';
+const out = document.getElementById('out'); const lines = []; let all = true;
+const cases = Object.keys(await (await fetch('cases_summary.json')).json());
+for (const c of cases) {
+  const m = prepare(await (await fetch(c + '.json')).json()); const t = await (await fetch(c + '_test.json')).json();
+  t.X = t.X.map(r => r.map(v => typeof v === 'string' ? Number(v) : v));
+  let a = 0, b = 0; const t0 = performance.now();
+  t.X.forEach((x, i) => { const s = rawScore(m, x); if (s === t.raw[i]) a++; if (s === t.raw_file[i]) b++; });
+  const pass = t.X.length > 0 && a === t.X.length && b === t.X.length; all &&= pass;
+  lines.push(JSON.stringify({ case: c, vectors: t.X.length, exactVsInMemoryModel: a, exactVsReloadedModel: b, msPerVector: +((performance.now() - t0) / t.X.length).toFixed(4), pass }));
+}
+lines.push(all ? 'ALL CASES PASS (bit-identical raw scores)' : 'FAILURES PRESENT'); out.textContent = lines.join('\n');
+</script>
