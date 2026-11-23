@@ -19,3 +19,13 @@ RUN_ON_LAPTOP.md, "Scripts that were NOT tested".
 | 11 | No real server test (v1's "FastAPI memory" figure was an import plus model load only) | Yes | A server memory or latency claim had no support | `server/server_app.py` plus `server_bench.py`: a real uvicorn process, size limit, PE check, SHA-256 check (409 on mismatch), thrember extraction, prediction and TreeSHAP | See CLOUD_REFERENCE_RESULTS.md |
 | 12 | Oversized uploads | Found in v2 testing | When the server rejects on `Content-Length`, the client sees a connection reset rather than a 413 | `server_bench.py` records `reset`. The instructions treat 413 or reset as "rejected" (UNSCANNED) | 60/100/200 MB files gave `reset`; the 10 MB file gave 200 |
 | 13 | No path to test real EMBER2024 rows | — | The synthetic sweep cannot decide the real training size | `train_once.py` reads thrember `X_train.dat` and a row index. `tools/make_week_index.py` builds the index (**UNTESTED on real data**) | Tested on a small `.dat` made from synthetic rows and on toy metadata |
+
+**Added after CI testing (14).** thrember (commit 0ef753e) requires `signify>=0.7.1`, but `signify` 0.9.3 no longer
+provides `SignedPEFile`, which thrember imports. A fresh install therefore failed with
+`ImportError: cannot import name 'SignedPEFile'`. This was found by the GitHub Actions run on a clean machine.
+Pinning signify exposed a second problem: `oscrypto` 1.3.0 from PyPI cannot parse OpenSSL 3 version strings on
+Linux and macOS (`LibraryNotFoundError`). Windows uses its own crypto libraries, so the laptop may not be affected,
+but that is UNVERIFIED.
+**Fix:** `requirements.txt` pins `signify==0.7.1` and `oscrypto` at upstream commit 1547f53 (via Git), and is
+installed before thrember. **Test:** in a fresh virtual environment, `import thrember.features` succeeds; the GitHub
+Actions run is recorded in PR #4.
