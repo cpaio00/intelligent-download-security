@@ -1,0 +1,7 @@
+fastapi>=0.110
+uvicorn>=0.30
+lightgbm==4.7.0
+numpy>=2.0
+pefile==2024.8.26
+# thrember (reference extractor), pinned to the commit used for EMBER2024 vectors:
+# python -m pip install "thrember @ git+https://github.com/FutureComputing4AI/EMBER2024@0ef753e81d98bf209f71b03cd331dfc190b5b54d"

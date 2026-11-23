@@ -1,0 +1,35 @@
+name: tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r ml/requirements.txt -r backend/requirements.txt pytest httpx
+          python -m pip install "thrember @ git+https://github.com/FutureComputing4AI/EMBER2024@0ef753e81d98bf209f71b03cd331dfc190b5b54d"
+      - name: Python tests (pipeline and server, synthetic models)
+        run: python -m pytest -q tests/python
+      - name: JavaScript unit tests
+        run: npm run test:js
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: End-to-end extension test (Chromium, synthetic models)
+        env:
+          PYTHON: python
+        run: npm run test:e2e

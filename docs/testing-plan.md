@@ -1,6 +1,6 @@
 # SentinelPE Testing and Evaluation Plan
 
-> **Status: proposed protocol.** No test here has been run on the project's implementation or on the development laptop. Exploratory feasibility checks run in a cloud workspace are recorded separately in [`feasibility-audit.md`](feasibility-audit.md) and do not complete any test below. Record environment, outputs, failures and evidence before marking a test complete.
+> **Status: proposed protocol.** No test here has been run on the project's implementation or on the development laptop. Exploratory feasibility checks run in a cloud workspace are recorded separately in [`feasibility-audit.md`](feasibility-audit.md) and do not complete any test below. Automated tests of the initial implementation exist ([`tests/README.md`](../tests/README.md)). They run on synthetic development models in headless Chromium, so they show that the workflow and failure handling behave as designed. They do not complete any test that requires the project's real models or Google Chrome on Windows. Record environment, outputs, failures and evidence before marking a test complete.
 
 ## 1. Evidence types
 
