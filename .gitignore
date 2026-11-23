@@ -60,3 +60,18 @@ models/*.joblib
 
 # Keep explicitly documented placeholders
 !.gitkeep
+
+# Feasibility kit outputs (generated locally; never commit binaries, matrices or models)
+feasibility/corpus/
+feasibility/variants/
+feasibility/large/
+feasibility/compact_models/
+feasibility/results/
+feasibility/equivalence/*.json
+!feasibility/equivalence/package.json
+feasibility/equivalence/*.txt
+feasibility/equivalence/*.npy
+feasibility/*.npy
+feasibility/*.dat
+feasibility/full_model.txt
+feasibility/*_rows.json

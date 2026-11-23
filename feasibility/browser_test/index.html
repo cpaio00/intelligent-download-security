@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8"><title>SentinelPE browser feasibility test</title>
+<h1>SentinelPE browser feasibility test (benign files only)</h1>
+<p>Serve the KIT ROOT folder (<code>python -m http.server 8765</code>) and open <code>http://localhost:8765/browser_test/</code>.</p>
+<p>1. Model equivalence: open <a href="../equivalence/run_browser.html">../equivalence/run_browser.html</a> (needs equivalence\gen_cases.py run first).</p>
+<p>2. Choose one or more benign PE files (multiple selection allowed): <input type="file" id="f" multiple></p>
+<p>Main-thread responsiveness: <span id="tick">0</span> timer ticks (should keep increasing while files are processed).</p>
+<pre id="out"></pre>
+<script type="module" src="page.js"></script>

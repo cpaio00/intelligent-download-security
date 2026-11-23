@@ -1,0 +1,1002 @@
+[
+ {
+  "file": "cryptography___rust.pyd",
+  "sha256": "9aab0bd7321bf03b7d832add76b6b31d6ba580840505b03c23c7773669e67247",
+  "bytes": 8315904,
+  "source": "cryptography-44.0.3-cp39-abi3-win_amd64.whl",
+  "licence": "Apache-2.0 OR BSD-3-Clause",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___multiarray_tests.cp312-win32.pyd",
+  "sha256": "3f4e1e96e49a580ac6a7713baef1be9651f79084ffad4bf4da1b007dfa789e2a",
+  "bytes": 57856,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___umath_tests.cp312-win32.pyd",
+  "sha256": "ca1ffb940100ba508f222ee5ceb45afff036e06c864b34d7701850d7896c7f25",
+  "bytes": 28160,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___rational_tests.cp312-win32.pyd",
+  "sha256": "3a7fe8e3dc17509243efa9155383f787492ac4c6925d40029dd0f116389d11d9",
+  "bytes": 33280,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___struct_ufunc_tests.cp312-win32.pyd",
+  "sha256": "051f7b8e0e009abc3638f5ca3a12478471343ee7829e3075334009cee75e2807",
+  "bytes": 11776,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___operand_flag_tests.cp312-win32.pyd",
+  "sha256": "6a62bbfc33d2571f65178b58393ffbcc7e86a6fd562aab9b31e7a24635237004",
+  "bytes": 10240,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___multiarray_umath.cp312-win32.pyd",
+  "sha256": "96a0511ca242cce48acd6d108f832bff617124dd1e6a2c3f23ca23fb54dc626d",
+  "bytes": 3949568,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___simd.cp312-win32.pyd",
+  "sha256": "f8a9c7b729b0eda3501bf37fb93c9d7838caecb34dbc54e500184813bdc6a276",
+  "bytes": 2170368,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___pocketfft_umath.cp312-win32.pyd",
+  "sha256": "876bc9b5669dfe146b79a0e129afefecbb88fdf03a6ba958ea49317fc0127f79",
+  "bytes": 200192,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__lapack_lite.cp312-win32.pyd",
+  "sha256": "dc787f05407db733f6e0fbf62f4ce2fa337df7a64e03f5a33728de34352309ac",
+  "bytes": 248320,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___umath_linalg.cp312-win32.pyd",
+  "sha256": "6d3d08864ee962e6da46acb6460afa5f92ce1b44e12cd0481442277c2fbc0f50",
+  "bytes": 1262592,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___bounded_integers.cp312-win32.pyd",
+  "sha256": "a8c2451c1714dd9de629b3a7c00d192a426355c02a8960910ed9fa802543f78a",
+  "bytes": 203776,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___common.cp312-win32.pyd",
+  "sha256": "03f9c3839436063478d9ef33aeef903747ed7ab6df9329d33abd7925aad4ded9",
+  "bytes": 144896,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___mt19937.cp312-win32.pyd",
+  "sha256": "92eb37b0ece62cb0863d07392d53dfd058b2ea800a2ec837dc3675f9af566b48",
+  "bytes": 72704,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___philox.cp312-win32.pyd",
+  "sha256": "96bf0fbb6dc2aa4a6974925ac25cdd0ccde0ae7407a186470bfcbd9e64058f96",
+  "bytes": 67584,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___pcg64.cp312-win32.pyd",
+  "sha256": "2d8e01dfdebc53b8a8fa4d48a0632c00b832742878f604d8a4024a83a9e06a2e",
+  "bytes": 84992,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___sfc64.cp312-win32.pyd",
+  "sha256": "40cdd35e63ad62299dcd26c4b1cc081005bc226de554546f404ebf50f2ffbdcb",
+  "bytes": 51712,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__bit_generator.cp312-win32.pyd",
+  "sha256": "dce084c82cb3327f51d66761adf8be809152bb5320713a1647f60963c2644820",
+  "bytes": 144384,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___generator.cp312-win32.pyd",
+  "sha256": "de749e9719845372a4e56add2770705b1634aa52175ba687769a81ef998383c2",
+  "bytes": 669184,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__mtrand.cp312-win32.pyd",
+  "sha256": "a90844289e288cf508bfac990cc5e99ef9ff88ca080b52c92464da2a67f4c29f",
+  "bytes": 565248,
+  "source": "numpy-2.2.6-cp312-cp312-win32.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "I386",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___pocketfft_umath.cp312-win_amd64.pyd",
+  "sha256": "25cc37acd3d849c0fde1e0dc0112979dec4ec4279b7826d1a45395fe966068c9",
+  "bytes": 279040,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__lapack_lite.cp312-win_amd64.pyd",
+  "sha256": "fce8ba55a94ab669c1b8447cda54edcccdcf181380c8edacc3c095517b9f9414",
+  "bytes": 17920,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___umath_linalg.cp312-win_amd64.pyd",
+  "sha256": "88c8d38d7b2f483542442292e149ca335462d1467b8e835b00a71a8b27125cf5",
+  "bytes": 108032,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__bit_generator.cp312-win_amd64.pyd",
+  "sha256": "eef81bf02fa9f387d6c4a18d52b22af58b737c01608f0d594130586a06022807",
+  "bytes": 163328,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__mtrand.cp312-win_amd64.pyd",
+  "sha256": "339f40f24231643777de36d5ff8121a07ccf2c4a66add63307d25f9d431c9928",
+  "bytes": 603136,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___bounded_integers.cp312-win_amd64.pyd",
+  "sha256": "0434a5b271f935deb8623bb8663f33132a70a8f4d1936c14432e16d4f6eb46fc",
+  "bytes": 208384,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___common.cp312-win_amd64.pyd",
+  "sha256": "9a39d43e0ef73dfb5a8b1abce92ff0063bffcd580d8be275f468961b24b153af",
+  "bytes": 152064,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___generator.cp312-win_amd64.pyd",
+  "sha256": "6dde7168fc52dcad27779d45dcc6828b91ec0d05bb6094c86d6aff8a1ee8e1b3",
+  "bytes": 714752,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___mt19937.cp312-win_amd64.pyd",
+  "sha256": "3331809b214fc30e2fc167f742ca3b1a84b567d185d4194fa8893a032010eeb4",
+  "bytes": 83456,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___pcg64.cp312-win_amd64.pyd",
+  "sha256": "448b71a0b7d9037d9655008fbc3081070fa801f757b83f9a3ee6e0934c095aa8",
+  "bytes": 93696,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___philox.cp312-win_amd64.pyd",
+  "sha256": "9c989e7b0fc383e2fa5aa15de2f17c5875b690dc64c44891ee1e1d54ce7cac4a",
+  "bytes": 77312,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___sfc64.cp312-win_amd64.pyd",
+  "sha256": "5732d38725cb5177c9de1e1d4bdb67389283a53986f87a5e52ca9255ec98c733",
+  "bytes": 60416,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___multiarray_tests.cp312-win_amd64.pyd",
+  "sha256": "24adbe4bbf7b2a6208aeb800d11b8b6957c925d3c796552b3a55e1b4e278754e",
+  "bytes": 64000,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___multiarray_umath.cp312-win_amd64.pyd",
+  "sha256": "d98a8f4ce703bf7158f639d24ff4a55ece2753a306a3f7074b4fa670660afee5",
+  "bytes": 4178432,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___operand_flag_tests.cp312-win_amd64.pyd",
+  "sha256": "11b8089e2de05a16725886f56ac4243135246f17c2e73e621d1f364466b26319",
+  "bytes": 11776,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___rational_tests.cp312-win_amd64.pyd",
+  "sha256": "3b495f96eb0920cb2b2794e9b143cae658fda2f0ee6332f8c8611e7be3992f31",
+  "bytes": 40448,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___simd.cp312-win_amd64.pyd",
+  "sha256": "19769241976fca6b5a08de0ff3e1dfc0d746a81ed4a2d9b40d28fd08e8928b2c",
+  "bytes": 2236928,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___struct_ufunc_tests.cp312-win_amd64.pyd",
+  "sha256": "59952c7bb0a09966b8e25cf5cceb3493b12223f4e70cf13a39c57b104f1668a6",
+  "bytes": 13824,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy___umath_tests.cp312-win_amd64.pyd",
+  "sha256": "33a116e22bb9fc6b0045c33a757b72da8864b45925678ce80cafe8de56318b17",
+  "bytes": 34304,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__libscipy_openblas64_-13e2df515630b4a41f92893938845698.dll",
+  "sha256": "6547e9fb966e9773caee2755e91a8bf4d6f3a2f0eebf9646b0158f8675ea4ab5",
+  "bytes": 20390912,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "numpy__msvcp140-263139962577ecda4cd9469ca360a746.dll",
+  "sha256": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde",
+  "bytes": 575056,
+  "source": "numpy-2.2.6-cp312-cp312-win_amd64.whl",
+  "licence": "Copyright (c) 2005-2024, NumPy Developers.",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": true
+ },
+ {
+  "file": "psutil___psutil_windows.pyd",
+  "sha256": "9c7fc855d9d1614e70705c7dcc6f4ac3cdcab5adfeb6a67d382f5ade09eadc15",
+  "bytes": 67072,
+  "source": "psutil-7.0.0-cp37-abi3-win_amd64.whl",
+  "licence": "BSD-3-Clause",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pythonnet__Python.Runtime.dll",
+  "sha256": "d204ad74dc18cd07320c8e665bd32ec6549b555ce97e61e4d3cf88437a64988e",
+  "bytes": 450048,
+  "source": "pythonnet-3.0.5-py3-none-any.whl",
+  "licence": "MIT",
+  "machine": "I386",
+  "dotnet": true,
+  "signed": false
+ },
+ {
+  "file": "pywin32__PyISAPI_loader.dll",
+  "sha256": "6d41c877190fb6ddc3c194304d2d77d4d70dc116b26f3805f93dafa9242a7c10",
+  "bytes": 69120,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__Pythonwin.exe",
+  "sha256": "8d9746c0cba69fdb1f25688c4dea587bdaa23b4184e86152c009bf6efff63c3d",
+  "bytes": 58368,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__dde.pyd",
+  "sha256": "fdaebfae159150de4747a36eed462d0efa5f7252808fdebaeb1089f6d7dddd7c",
+  "bytes": 97792,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__mfc140u.dll",
+  "sha256": "1ec2a31a1302e720c799bad2fd90cf3457c6b2a375c4b41faefee1a91d92f3e0",
+  "bytes": 5653576,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": true
+ },
+ {
+  "file": "pywin32__scintilla.dll",
+  "sha256": "16a21828645957e08cf2f9d7e2e84ff925d3664ea6e219d3d544076d81d5e016",
+  "bytes": 1565184,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32ui.pyd",
+  "sha256": "aa9f43412393cd50340570abf6ae6fd5c3a2119555b5d6caf43ac693cc2aa244",
+  "bytes": 1044992,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32uiole.pyd",
+  "sha256": "563b1cf67b8bee2b6f9c2472ddf8c7ee65af7be98efff371cb54a61d33f3ed55",
+  "bytes": 74240,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__pythoncom312.dll",
+  "sha256": "63514065569f168fee5ddf5d8e3170d7a4635e9553f86b93b0457e19cc2f044e",
+  "bytes": 680960,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__pywintypes312.dll",
+  "sha256": "c8425ad78237164e31efbf859a857b02e098fcf4b37caadc1a725d21490f5f3f",
+  "bytes": 136192,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32___win32sysloader.pyd",
+  "sha256": "46ef70f7390c09daee4b1636dc9c434ceb2dd411e812d192396005edb8fd0484",
+  "bytes": 14848,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32___winxptheme.pyd",
+  "sha256": "6557386bfaf9be15b490d9b632879230e7455d6ee650571c1b046e87502effd5",
+  "bytes": 25600,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__mmapfile.pyd",
+  "sha256": "cb986de28bd5a13c11fd7d83c5db3fc3e32d5ed218638d859d457a38aa0f4fff",
+  "bytes": 22016,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__odbc.pyd",
+  "sha256": "28e1d3ec98c8392cfdee830a208f02f3c4a2b6ce91a9818ad551c29c208bacde",
+  "bytes": 41984,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__perfmon.pyd",
+  "sha256": "fc492fe20827c4d4b0256209f99e9b87cbf5a6a1c9d98e553d2864c412d8b414",
+  "bytes": 30208,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__perfmondata.dll",
+  "sha256": "c78c87a8346dc392d8ed1c853fff3ec4f17edcd16f083060c46cf82ea1e9de87",
+  "bytes": 19456,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__pythonservice.exe",
+  "sha256": "f95c20d0210e1c7c61ad993e7d5644ec0cafcd6b3f36550ebd2773e262af7136",
+  "bytes": 20992,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__servicemanager.pyd",
+  "sha256": "7f30d91223027fb4a88de94e5709d79afafee33e8729a63014fbbdaff98055ef",
+  "bytes": 41472,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__timer.pyd",
+  "sha256": "0ec4c6c2945d2355c10c3a4a1aecb20e5c08513837ddf332c490e7203458426f",
+  "bytes": 16896,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32api.pyd",
+  "sha256": "367a87c81b02b234b6176d498bcae5c27ee32c903c29b87cb63f40d9e5a642fc",
+  "bytes": 133632,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32clipboard.pyd",
+  "sha256": "972231a52792276ef2a20168656b8141acf03931c86e3058695a8bae90c18ddb",
+  "bytes": 28160,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32console.pyd",
+  "sha256": "6aa63faf5df7b34186c22f41087dcf954145e24848759a03c036421b61d1211a",
+  "bytes": 60416,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32cred.pyd",
+  "sha256": "9ce6ce68177059ba2581cfe896282fed693972a9e813dd09b736ae4ae8d21a18",
+  "bytes": 38912,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32crypt.pyd",
+  "sha256": "4a4c117237bc75abee9dda287b2c3059e4b7d5608200ba8a984d5fca6bc9f429",
+  "bytes": 125440,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32event.pyd",
+  "sha256": "6cc203f23f9c4efd9def1b51a0506fff11ead712cdd37cfc4de3c3f8cbf9dcfd",
+  "bytes": 28672,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32evtlog.pyd",
+  "sha256": "58d00c14c6920905b5cc3a57c0cf08a62a49c8970dac3124fabc41a6bb131786",
+  "bytes": 73728,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32file.pyd",
+  "sha256": "15536740713a5fdce789116c961d4a28d2265e85b108a574f18ac8314df5ab7e",
+  "bytes": 144896,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32gui.pyd",
+  "sha256": "0d9412bbf844bb2f2f10a6bf59c715900330fb990ca8f2e17590f9f8b5e6252a",
+  "bytes": 221184,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32help.pyd",
+  "sha256": "9621c2bc81d815e871b7c807729549206cf701ac64c2b6739440990fe38fc5b4",
+  "bytes": 54784,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32inet.pyd",
+  "sha256": "0407b4e62992478bf17796d8e4dcc9fadbdff97584dea2d7de1f6e9db8d2a7e9",
+  "bytes": 53760,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32job.pyd",
+  "sha256": "49ca998dde35a2a8c34bb54412719cd7ea2bb1a056856c01fdaf75d2eee57ab3",
+  "bytes": 28672,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32lz.pyd",
+  "sha256": "264c36f439e9969843cb7990e2cb5c826aeed5f1a80becc4229dbdfd4c1bb003",
+  "bytes": 16896,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32net.pyd",
+  "sha256": "1191a2ba6ca38483a3e20b8c5ec9a57ed22d9202727a18ac91480f83ee11c6c6",
+  "bytes": 92672,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32pdh.pyd",
+  "sha256": "cb1d026dac9497a0dd5680c71bd00d7edceacb46f6daf461d024ebd501061b91",
+  "bytes": 35328,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32pipe.pyd",
+  "sha256": "6d95b253f5cd2fab1c9d4c8d254fdd5b8b73e26ac9571d404a49c22d93853ad7",
+  "bytes": 28672,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32print.pyd",
+  "sha256": "13b65e6863b8671a49453d45430c3a92b316b617d2b0718503e0c51e70d91e48",
+  "bytes": 76288,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32process.pyd",
+  "sha256": "d2428c4c5c3b5653f00af4358f06a9bcae8232a136245440219860b48f86320c",
+  "bytes": 53760,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32profile.pyd",
+  "sha256": "e40250a25f210936dfb77b58161bfc89dada29baff8325187af0a3cca39fa56f",
+  "bytes": 27136,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32ras.pyd",
+  "sha256": "49f145eadc110e90279f1bc0463f593b37cb686a541219d86bf0ff8322c0ebf1",
+  "bytes": 34304,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32security.pyd",
+  "sha256": "561c8d5be1373234650707eb309a8e5ec68f15c9d8b5a02687db63766293eef1",
+  "bytes": 137728,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32service.pyd",
+  "sha256": "71edbc995b81c7f17975d6e94024020bce768c3c2152a0c2292697a8c7639094",
+  "bytes": 59392,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32trace.pyd",
+  "sha256": "85f4937b9dcd7298e7a6f86f80a1b9c2c30b5f88a3321fca402d63fe1ca28d4d",
+  "bytes": 24064,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32transaction.pyd",
+  "sha256": "a66e0c64e526b4fdf0fb322e2d71d303750e91cb3a7c53064bf0465629cff02d",
+  "bytes": 19456,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32ts.pyd",
+  "sha256": "d20131212805f2a4d6c085939bca09b4f106876accda16239206240d37d0752c",
+  "bytes": 33280,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__win32wnet.pyd",
+  "sha256": "c40406d7c62b77d7217673362c5ddc1188a6f36e2aeea911802e743dc213a9c4",
+  "bytes": 37888,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__adsi.pyd",
+  "sha256": "dd192d1ffa3a9cafc5c8cdf3fb73d2519b3b2dc3617487c0fb63d22b7ef737e7",
+  "bytes": 99328,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__authorization.pyd",
+  "sha256": "56860ebbdea6c58abaacdc4a2a6b107178bebc1b6ad0227a528ac3cca7df7a16",
+  "bytes": 29696,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__axcontrol.pyd",
+  "sha256": "7df26894b6189073c2a5d579034770be8b744e8267e0e7e1b0562bb6d5944244",
+  "bytes": 144896,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__axscript.pyd",
+  "sha256": "c85a1407d18858415c92488fd74ff787c8e074c2824e93fe562453508b5e5bdb",
+  "bytes": 94208,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__bits.pyd",
+  "sha256": "8276f54f0cd6f50f161d3cc0b9616d5409d42b1913de9decd36d46c1d6a34a60",
+  "bytes": 63488,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__directsound.pyd",
+  "sha256": "5941de7f739f9605217836fa3b0b4d5b753f47f635a81312eb607f1254650c30",
+  "bytes": 77312,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__ifilter.pyd",
+  "sha256": "731805590e980e3ac918b0f979cc150ea5b859e9e383d77cbd87ccf88540fb82",
+  "bytes": 30720,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__internet.pyd",
+  "sha256": "32e873a1beb2258582407d67619f4af8838f64795b401bc47e7b7c9d994ad112",
+  "bytes": 94208,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__exchange.pyd",
+  "sha256": "858bac506ff7695b477f4eb2355d36a921176cf712748ce32cc21872048ba369",
+  "bytes": 141824,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__mapi.pyd",
+  "sha256": "14cd51056ea19d56bb212784cc22ed8b35c09a4f645dc60a6646fd7ad2b848f4",
+  "bytes": 250368,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__propsys.pyd",
+  "sha256": "8bb23cb712b4eca1c8efc38d6b95a3800593175cf57f8f8883202f856686cdfe",
+  "bytes": 139776,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__shell.pyd",
+  "sha256": "1a3ade9ff876525dc857cb1f732fb1d35784bcb33eb8ecb52dcf6325f84cbc95",
+  "bytes": 538112,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ },
+ {
+  "file": "pywin32__taskscheduler.pyd",
+  "sha256": "632e72d1fe498d2687e74d5a7146a8f4e34004c1e01e33dcfd421fcd0c6a2ba9",
+  "bytes": 53760,
+  "source": "pywin32-310-cp312-cp312-win_amd64.whl",
+  "licence": "PSF",
+  "machine": "AMD64",
+  "dotnet": false,
+  "signed": false
+ }
+]
