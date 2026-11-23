@@ -1,104 +1,102 @@
-# Proposed System Architecture
+# SentinelPE Proposed System Architecture
 
-> Status: design proposal. Components and flows below must be validated during implementation.
+> **Status: design proposal, not implemented.** The components and data flows below are the planned design. Nothing here is claimed to work until code and test evidence exist.
 
-## 1. Design principles
+## 1. Purpose
 
-- Treat downloaded content as untrusted until an explicit decision is made.
-- Separate the browser interface from file analysis.
-- Keep analysis isolated from the host and restrict network access.
-- Use deterministic baselines before adding machine learning.
-- Preserve evidence for decisions and communicate uncertainty.
-- Prefer reproducible experiments and least-privilege components.
+SentinelPE is a local-first browser-based prototype for static malware detection of Windows PE files (`.exe`, `.dll`). A compact local classifier decides most files on the user's device; files in an uncertain band are offered for escalation to a stronger server-side classifier, and are sent only after explicit per-file consent. It is a research prototype, not a replacement for antivirus software, and no verdict proves that a file is safe.
 
-## 2. High-level components
+## 2. Components
 
-### Browser extension
+### 2.1 Chrome extension (Manifest V3)
 
-A Chrome Manifest V3 extension will provide the user-facing interface and integrate with supported browser download events. It should display the download state, analysis progress, and final assessment.
+- Provides an extension page in which the user selects a PE file. The page reads the file through the File API, which lets web content read files the user selects with a file input or by drag and drop.
+- Runs validation, feature extraction, local inference, the consent prompt and result display.
+- Persists analysis state, because Chrome terminates an extension service worker after 30 seconds of inactivity, when one event or API call takes longer than five minutes, or when a fetch response takes longer than 30 seconds.
+- Requests the minimum permissions required.
 
-**Feasibility gate:** Confirm the exact guarantees of the Chrome downloads APIs. In particular, establish whether the extension can reliably prevent a file from becoming available in the normal download location before analysis completes. Do not assume that observing or pausing a download is equivalent to pre-save quarantine.
+The Chrome downloads API reports download events, and `onDeterminingFilename` delays completion until every listener has answered, but no method of the API returns a downloaded file's contents. Holding a download is therefore not the same as being able to analyse it (see Section 5).
 
-### Staging and orchestration service
+### 2.2 Input validation and feature extraction
 
-A local service may receive a file or a controlled reference to it, assign an analysis job identifier, enforce size and type limits, and coordinate the worker. Authentication and access controls are required even for a localhost service.
+- Validates PE structure rather than trusting the filename or MIME type, and enforces a size limit.
+- Extracts only the EMBER2024 feature groups that pass the parity test (O1).
+- A file that fails PE validation, or a required feature group that cannot be computed for that file, produces **UNSCANNED**. (The reference extractor still emits a vector when its PE parser fails; SentinelPE deliberately does not.)
+- Computes the file's SHA-256 digest so that a server reply can be matched to the exact bytes analysed.
 
-### Analysis worker
+### 2.3 Local classifier
 
-The worker performs bounded static inspection, records metadata, and requests sandbox analysis only when appropriate. It must validate inputs, impose time and resource limits, and avoid trusting file names or declared MIME types.
+- A compact LightGBM model trained only on parity-verified feature groups.
+- Proposed deployment: export with LightGBM `dump_model()` (a JSON description of the trees) and evaluate with a JavaScript tree evaluator. Equivalence with Python predictions, including categorical splits and missing values, must be shown on identical EMBER2024 vectors, and the exported file size measured.
+- Output: the **uncalibrated predicted probability *s***.
 
-### Isolation environment
+### 2.4 Routing
 
-The sandbox should be disposable and separated from the host. The design should consider filesystem isolation, process restrictions, memory and CPU limits, network policy, snapshot/revert capability, and safe disposal of artefacts.
+| Concept | Meaning in SentinelPE |
+|---|---|
+| Classifier score | *s*, LightGBM's predicted probability before calibration |
+| Uncertainty measure | Whether *s* lies between the lower and upper thresholds |
+| Routing decision | *s* ≤ lower → local benign; *s* ≥ upper → local malicious; otherwise offer escalation |
+| Calibrated probability | Platt or isotonic mapping of *s*, used only to show interpretable confidence to the user |
 
-### Detection and decision layer
+Thresholds are fitted on the calibration weeks and then kept fixed. Because Platt scaling is strictly monotonic (order-preserving when its fitted slope is positive in *s*, checked after fitting) and isotonic regression is non-decreasing (it can create ties), calibration cannot enlarge the set of routing outcomes achievable with two thresholds on *s*. Routing therefore uses *s* directly.
 
-The decision layer may combine static indicators, sandbox observations, reputation information (if permitted), and a machine-learning score. It must distinguish observed evidence from model inference. A model score alone must not be treated as a guarantee of safety.
+### 2.5 Server (FastAPI)
 
-### User interface
+- Accepts a file only after consent for that file; authenticates requests; enforces size limits; checks the PE signature; parses in a resource- and time-limited process; never executes uploads; deletes temporary files after analysis; does not log file contents.
+- Classifies with a full-feature LightGBM model.
+- Returns verdict, model version, SHAP attributions (LightGBM feature contributions) and the SHA-256 digest of the analysed bytes.
+- Attributions explain how features moved the model's output; they do not show that the prediction is correct or what the program would do when run.
 
-The extension should communicate states such as pending, analysing, suspicious, malicious (only when supported by defined evidence), inconclusive, and completed. The UI should explain why a result was produced and avoid implying certainty where none exists.
+### 2.6 Python research pipeline
 
-## 3. Proposed data flow
+Data audit, reference feature extraction (thrember), training of the server and local models, calibration, threshold fitting and the offline routing evaluation, all with recorded versions and seeds.
 
-1. The browser reports a download event to the extension.
-2. The extension applies the verified download-handling mechanism.
-3. A staged file or controlled file reference is passed to the local orchestration service.
-4. The service validates the request and creates an analysis job.
-5. The worker performs static checks and, if enabled, submits the file to the isolated environment.
-6. Analysis results are normalised and passed to the decision layer.
-7. The service returns a result and supporting evidence to the extension.
-8. The user receives the result and an appropriate next action.
-9. Temporary files and sandbox state are cleaned up according to the retention policy.
+## 3. Data flow
 
-The precise ordering of steps 2 and 3 depends on the browser feasibility test. If safe pre-release staging cannot be guaranteed, the product description and threat model must be adjusted rather than overstating the protection.
+| Situation | What stays on the device | What leaves the device | Result |
+|---|---|---|---|
+| *s* outside the band | File and features | Nothing | Local verdict |
+| *s* inside the band, user declines | File and features | Nothing | UNSCANNED (local result inconclusive) |
+| *s* inside the band, user consents | — | File bytes, SHA-256 digest, and the request metadata any web request reveals (e.g. IP address, time). The filename is not sent | Server verdict and attributions |
+| Server unavailable, timeout, invalid reply or digest mismatch | — | As above, if already sent | UNSCANNED |
+| Any analysis failure | — | — | UNSCANNED |
 
-## 4. Trust boundaries
+Local-first processing reduces, but does not remove, the transfer of file contents.
 
-| Boundary | Main concern | Required control |
+## 4. Failure states
+
+Each of the following ends in **UNSCANNED**, never in a benign verdict:
+
+- Unsupported file type or non-PE input.
+- Invalid, truncated or malformed PE.
+- File exceeds the size limit.
+- Local feature extraction failed.
+- Local result inconclusive and the user declined escalation.
+- Server unavailable or request timed out.
+- Server reply invalid or digest mismatch.
+- Service-worker termination interrupted the analysis.
+
+## 5. Chrome download-interception feasibility gate
+
+The primary workflow is user-selected file analysis (supervisor-approved). Pre-release interception is investigated in a two-week experiment with benign files and a disposable browser profile, recording the event sequence, the effect of delaying filename determination, pause, resume and cancel, when the file becomes readable in the Downloads folder, service-worker restarts and behaviour under repeated and concurrent downloads.
+
+- **Adopt** pre-release analysis only if repeated tests show that the file is inaccessible until a decision is made and that the analysed bytes equal the delivered bytes.
+- **Otherwise** the user-selected workflow remains the only workflow, and reports describe the protection boundary actually tested.
+
+## 6. Trust boundaries
+
+| Boundary | Risk | Planned control |
 |---|---|---|
-| Browser to local service | Unauthorised local requests | Local binding, request authentication, origin validation, strict input validation |
-| Service to worker | Malformed jobs or resource exhaustion | Schema validation, queue limits, timeouts, least privilege |
-| Worker to sandbox | Escape or host compromise | Disposable isolation, restricted mounts, no host credentials |
-| Sandbox to network | Malware communication or lateral movement | Network disabled by default; tightly controlled test network when authorised |
-| Analysis result to UI | Misleading or tampered results | Structured schema, provenance, explicit uncertainty |
-| Repository and build pipeline | Secret or sample leakage | Secret scanning, ignore rules, dependency review, no live samples in Git |
+| File selection → extension | Malformed or non-PE input | Structural validation, size limit, UNSCANNED on failure |
+| Extension → local inference | Feature mismatch with training | Parity-verified groups only; evaluator equivalence test |
+| Extension → server | Unconsented disclosure | Per-file consent; nothing sent on decline |
+| Server reply → extension | Wrong or tampered reply | Schema validation and digest match, else UNSCANNED |
+| API → classifier | Resource exhaustion | Limits, timeouts, isolated parsing |
+| Dataset → training | Leakage across time | Chronological split audited from metadata; test weeks used once |
+| Model → user | False reassurance | No absolute safety claim; calibrated confidence shown |
+| Repository | Sample or secret leakage | No malware, credentials or file contents committed |
 
-## 5. Threats and abuse cases to consider
+## 7. Decision records
 
-- Malformed files designed to crash parsers or exhaust resources
-- Archive bombs and deeply nested archives
-- Files that misrepresent their type or extension
-- Time-delayed or environment-aware malicious behaviour
-- Sandbox escape attempts
-- Localhost request abuse and cross-origin requests
-- Race conditions in the browser download workflow
-- False positives that block legitimate files
-- False negatives that incorrectly reassure users
-- Leakage of confidential files through external analysis services
-
-## 6. Data handling
-
-The implementation should define:
-- Maximum file size and supported file types
-- Temporary storage location and access permissions
-- Retention and secure deletion rules
-- Whether file contents ever leave the local machine
-- Logging fields and redaction rules
-- Dataset provenance and licence records
-
-Avoid storing full file contents in logs. Use hashes and minimal metadata where sufficient.
-
-## 7. Early technical proof-of-concept tests
-
-1. Verify the browser event lifecycle and available control points for downloads.
-2. Measure whether a file can be staged without being exposed in the normal download directory.
-3. Test interrupted, resumed, duplicate, and cancelled downloads.
-4. Test large files, archives, unsupported formats, and network failures.
-5. Demonstrate that the analysis worker cannot access sensitive host paths.
-6. Demonstrate that the sandbox is disposable and cannot access the host's credentials.
-7. Verify cleanup after success, failure, timeout, and service restart.
-
-## 8. Architecture decision records
-
-Important choices should be recorded in short decision records under docs/decisions/, including context, options considered, decision, trade-offs, and date. This will make the research and implementation rationale auditable.
+See [`docs/decisions/`](decisions/).
